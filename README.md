@@ -25,10 +25,10 @@ pacmd load-module module-null-sink sink_name=MySink
 
 ## Todo
 
-* Handle filename conflicts
-* Hide sidebar and go full screen before starting the recording.
-* Disable microphone
+* Add custom CSS to hide unwanted elements
+* Make delay a bit longer to make sure the full screen popup isn't capture on video
 * Rename user when joining
+* Handle filename conflicts
 * Support using a authenticated user
 * Support using chromium based browser
 * Implement Talk chat commands

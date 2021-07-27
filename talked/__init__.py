@@ -12,6 +12,9 @@ from pyvirtualdisplay import Display
 
 
 def main():
+    # Start instance of pulseaudio. If run in container.
+    subprocess.run(["pulseaudio", "-D"])
+
     with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
         browser = launch_browser()
         subprocess.run(
@@ -34,7 +37,7 @@ def main():
                 "-ac",
                 "2",
                 "-i",
-                "1",
+                "0",
                 "-c:v",
                 "libx264",
                 "-crf",
