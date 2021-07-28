@@ -20,15 +20,14 @@ Call recording for Nextcloud Talk
 
 ## Todo
 
-* Add custom CSS to hide unwanted elements
-* Make delay a bit longer to make sure the full screen popup isn't capture on video
-* Rename user when joining
-* Handle filenames
-* Figure out default transcoding settings
-* Create config file
-* Integrate into Talk
-* Create setup for running on Nextcloud server or remote server
-* Create docker container
+- [ ] Add custom CSS to hide unwanted elements
+- [ ] Rename user when joining
+- [ ] Handle filenames
+- [x] Figure out default transcoding settings
+- [ ] Create config file
+- [ ] Integrate into Talk
+- [ ] Create setup for running on Nextcloud server or remote server
+- [ ] Create docker container
 
 ## Later
 * Option to enable and disable recording of chat

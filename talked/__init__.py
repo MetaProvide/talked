@@ -12,14 +12,19 @@ from pyvirtualdisplay import Display
 
 
 def main():
-    # Start instance of pulseaudio. If run in container.
+    # Make sure an instance of Pulseaudio is running.
     subprocess.run(["pulseaudio", "-D"])
 
     with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
         browser = launch_browser()
-        subprocess.run(
+        ffmpeg = subprocess.Popen(
             [
                 "ffmpeg",
+                "-nostdin",
+                "-nostats",
+                "-hide_banner",
+                "-loglevel",
+                "warning",
                 "-fflags",
                 "+igndts",
                 "-f",
@@ -30,23 +35,32 @@ def main():
                 "30",
                 "-draw_mouse",
                 "0",
+                "-thread_queue_size",
+                "4096",
                 "-i",
                 display.env()["DISPLAY"],
                 "-f",
                 "pulse",
                 "-ac",
                 "2",
+                "-thread_queue_size",
+                "4096",
                 "-i",
                 "0",
                 "-c:v",
                 "libx264",
                 "-crf",
-                "18",
+                "25",
                 "-preset",
-                "ultrafast",
+                "veryfast",
+                "-threads",
+                "1",
                 "output.mp4",
             ]
         )
+        print("Recording has started")
+        time.sleep(60)
+        ffmpeg.terminate()
         browser.close()
 
 
@@ -92,7 +106,7 @@ def launch_browser():
     )
     page.send_keys("f")
 
-    time.sleep(3)
+    time.sleep(4)
     return driver
 
 
