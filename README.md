@@ -20,9 +20,9 @@ Call recording for Nextcloud Talk
 
 ## Todo
 
-- [ ] Add custom CSS to hide unwanted elements
-- [ ] Rename user when joining
+- [x] Rename user when joining
 - [ ] Handle filenames
+- [ ] Add custom CSS to hide unwanted elements
 - [x] Figure out default transcoding settings
 - [ ] Create config file
 - [ ] Integrate into Talk

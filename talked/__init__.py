@@ -13,7 +13,7 @@ from pyvirtualdisplay import Display
 
 def main():
     # Make sure an instance of Pulseaudio is running.
-    subprocess.run(["pulseaudio", "-D"])
+    subprocess.run(["pulseaudio", "--start"])
 
     with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
         browser = launch_browser()
@@ -43,6 +43,8 @@ def main():
                 "pulse",
                 "-ac",
                 "2",
+                "-channel_layout",
+                "stereo",
                 "-thread_queue_size",
                 "4096",
                 "-i",
@@ -59,7 +61,7 @@ def main():
             ]
         )
         print("Recording has started")
-        time.sleep(60)
+        time.sleep(30)
         ffmpeg.terminate()
         browser.close()
 
@@ -67,6 +69,7 @@ def main():
 def launch_browser():
     options = Options()
     options.set_preference("media.navigator.permission.disabled", True)
+    options.set_preference("full-screen-api.warning.timeout", 0)
     options.add_argument("--kiosk")
     options.add_argument("--width=1920")
     options.add_argument("--height=1080")
@@ -74,6 +77,10 @@ def launch_browser():
     driver = Firefox(options=options)
     driver.get("")
 
+    # Change the name of the recording user
+    change_name_of_user(driver)
+
+    # Wait for the green Join Call button to appear then click it
     join_call = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
             (By.CSS_SELECTOR, "button.top-bar__button.success")
@@ -82,20 +89,34 @@ def launch_browser():
     time.sleep(2)
     join_call.click()
 
+    # Wait for the call to initiate
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".top-bar.in-call"))
     )
 
+    # Get page body to send keyboard shortcuts
     page = driver.find_element_by_tag_name("body")
 
+    # Press escape to remove focus from chat.
     page.send_keys(Keys.ESCAPE)
+    # Press m to mute the microphone, if there is one attached.
     page.send_keys("m")
 
+    # Switch to speaker view
+    speaker_view = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, ".top-bar.in-call button.icon-promoted-view")
+        )
+    )
+    speaker_view.click()
+
+    # Close the sidebar
     sidebar_close = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, "a.app-sidebar__close"))
     )
     sidebar_close.click()
 
+    # Wait for sidebar to close, then go fullscreen
     WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located(
             (
@@ -106,8 +127,21 @@ def launch_browser():
     )
     page.send_keys("f")
 
-    time.sleep(4)
+    # Give it some time to properly connect to participants.
+    time.sleep(5)
     return driver
+
+
+def change_name_of_user(driver):
+    edit_name = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located(
+            (By.CSS_SELECTOR, ".username-form button.icon-rename")
+        )
+    )
+    edit_name.click()
+    driver.find_element_by_css_selector("input.username-form__input").send_keys(
+        "Talked" + Keys.ENTER
+    )
 
 
 if __name__ == "__main__":
