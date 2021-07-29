@@ -69,13 +69,14 @@ def main():
 def launch_browser():
     options = Options()
     options.set_preference("media.navigator.permission.disabled", True)
+    options.set_preference("privacy.webrtc.legacyGlobalIndicator", False)
     options.set_preference("full-screen-api.warning.timeout", 0)
     options.add_argument("--kiosk")
     options.add_argument("--width=1920")
     options.add_argument("--height=1080")
 
     driver = Firefox(options=options)
-    driver.get("https://cloud.walbeck.it/call/ex9vjzr3")
+    driver.get("")
 
     # Change the name of the recording user
     change_name_of_user(driver)
@@ -127,6 +128,8 @@ def launch_browser():
     )
     page.send_keys("f")
 
+    load_custom_css(driver)
+
     # Give it some time to properly connect to participants.
     time.sleep(5)
     return driver
@@ -142,6 +145,12 @@ def change_name_of_user(driver):
     driver.find_element_by_css_selector("input.username-form__input").send_keys(
         "Talked" + Keys.ENTER
     )
+
+
+def load_custom_css(driver):
+    with open("custom_css.js") as f:
+        javascript = "".join(line.strip() for line in f)
+    driver.execute_script(javascript)
 
 
 if __name__ == "__main__":
