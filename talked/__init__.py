@@ -57,7 +57,7 @@ def main():
                 "veryfast",
                 "-threads",
                 "1",
-                "output.mp4",
+                f"{time.strftime('%Y%m%dT%H%M%S')}_output.mp4",
             ]
         )
         print("Recording has started")
@@ -75,7 +75,7 @@ def launch_browser():
     options.add_argument("--height=1080")
 
     driver = Firefox(options=options)
-    driver.get("")
+    driver.get("https://cloud.walbeck.it/call/ex9vjzr3")
 
     # Change the name of the recording user
     change_name_of_user(driver)
