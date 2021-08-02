@@ -50,7 +50,14 @@ python3 talked/__init__.py
 
 ### Both
 
-The last thing is to create a public call on your Nextcloud instance of choice and paste the call link between the quotes on line 79 where it says `driver.get("")`. Then join the call yourself and run the program.
+The last thing to do is create a file called `config.json` in the root of the project which contains a link to a public Nextcloud Talk room. Below you can see the boilerplate:
+```
+{
+  "call_link": ""
+}
+```
+
+Lastly remember to join the call before starting the program, as it will only join if there is a call in progress.
 
 ## Todo
 
@@ -58,7 +65,7 @@ The last thing is to create a public call on your Nextcloud instance of choice a
 - [x] Handle filenames
 - [x] Add custom CSS to hide unwanted elements
 - [x] Figure out default transcoding settings
-- [ ] Create config file
+- [x] Create config file
 - [ ] Integrate into Talk
 - [ ] Create setup for running on Nextcloud server or remote server
 - [ ] Create docker container

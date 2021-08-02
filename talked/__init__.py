@@ -1,5 +1,6 @@
 import time
 import subprocess
+import json
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -12,11 +13,17 @@ from pyvirtualdisplay import Display
 
 
 def main():
+    with open("config.json") as config_file:
+        try:
+            config = json.load(config_file)
+        except ValueError:
+            exit("Invalid json in config file.")
+
     # Make sure an instance of Pulseaudio is running.
     subprocess.run(["pulseaudio", "--start"])
 
     with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
-        browser = launch_browser()
+        browser = launch_browser(config["call_link"])
         ffmpeg = subprocess.Popen(
             [
                 "ffmpeg",
@@ -66,7 +73,7 @@ def main():
         browser.close()
 
 
-def launch_browser():
+def launch_browser(call_link):
     options = Options()
     options.set_preference("media.navigator.permission.disabled", True)
     options.set_preference("privacy.webrtc.legacyGlobalIndicator", False)
@@ -76,7 +83,7 @@ def launch_browser():
     options.add_argument("--height=1080")
 
     driver = Firefox(options=options)
-    driver.get("")
+    driver.get(call_link)
 
     # Change the name of the recording user
     change_name_of_user(driver)
