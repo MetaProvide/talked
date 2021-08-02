@@ -35,3 +35,7 @@ Call recording for Nextcloud Talk
 * Support using a authenticated user
 * Add options to control transcoding
 * When using authenticated user, add option to auto add the recording user when recording non public chat.
+
+## License
+
+This program is licensed under the AGPLv3 or later.
