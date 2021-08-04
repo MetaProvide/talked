@@ -35,12 +35,12 @@ docker build . -f .devcontainer/Dockerfile.generic -t talked
 
 Then start the container using this command, it will take over the current terminal you have open. The command will start the docker container giving you a bash shell and a user with the same ID as your user on the host. The root of this project will also be passthrough to the container in the /talked folder. The container will get removed when you exit out of it so you don't manually have to do it.
 ```
-docker run --rm -it --user "$(id -u):$(id -g)" -v "$(pwd):/talked" talked bash
+docker run --rm -it -v "$(pwd):/talked" talked
 ```
 
 When you enter the container you will be placed in the /talked folder, to get started first install the python dependencies using poetry.
 ```
-poetry install --no-root
+poetry install
 ```
 
 Then you can run the program as below:

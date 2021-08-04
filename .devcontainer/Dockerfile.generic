@@ -13,10 +13,17 @@ RUN set -ex; \
         pulseaudio \
         xvfb \
         ffmpeg \
+        sudo \
     ; \
     pip3 install --no-cache-dir poetry; \
     rm -rf /var/lib/apt/lists/*; \
-    mkdir /.config /.cache /.local /talked; \
-    chmod 777 /.config /.cache /.local /talked;
+    mkdir /talked; \
+    chmod 777 /talked; \
+    groupadd --gid 1001 talked; \
+    useradd -s /bin/bash --uid 1000 --gid talked -m talked; \
+    echo talked ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/talked;
 
 WORKDIR /talked
+USER talked:talked
+
+CMD [ "/bin/bash" ]
