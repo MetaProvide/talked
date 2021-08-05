@@ -7,6 +7,10 @@ style.appendChild(document.createTextNode(`
     button.stripe--collapse {
         display: none;
     }
+
+    .stripe-wrapper {
+        width: 100%;
+    }
 `));
 
 document.getElementsByTagName('head')[0].appendChild(style);
