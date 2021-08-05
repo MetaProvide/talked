@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 from pyvirtualdisplay import Display
 
@@ -162,12 +162,14 @@ def join_call(driver):
 def switch_to_speaker_view(driver):
     # Switch to speaker view
     logging.info("Switching to speaker view")
-    speaker_view = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, ".top-bar.in-call button.icon-promoted-view")
+    try:
+        driver.find_element_by_css_selector(
+            ".top-bar.in-call button.icon-promoted-view"
+        ).click()
+    except NoSuchElementException:
+        logging.info(
+            "Speaker view button wasn't found. Assuming we are already in speaker view."
         )
-    )
-    speaker_view.click()
 
 
 def close_sidebar(driver):
