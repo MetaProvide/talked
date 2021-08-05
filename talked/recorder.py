@@ -93,21 +93,7 @@ def launch_browser(call_link):
     logging.debug("Changing name of recording user")
     change_name_of_user(driver)
 
-    # Wait for the green Join Call button to appear then click it
-    logging.debug("Waiting for join call button to appear")
-    join_call = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, "button.top-bar__button.success")
-        )
-    )
-    time.sleep(2)
-    logging.debug("Joining call")
-    join_call.click()
-
-    # Wait for the call to initiate
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, ".top-bar.in-call"))
-    )
+    join_call(driver)
 
     # Get page body to send keyboard shortcuts
     page = driver.find_element_by_tag_name("body")
@@ -117,31 +103,11 @@ def launch_browser(call_link):
     # Press m to mute the microphone, if there is one attached.
     page.send_keys("m")
 
-    # Switch to speaker view
-    logging.debug("Switching to speaker view")
-    speaker_view = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, ".top-bar.in-call button.icon-promoted-view")
-        )
-    )
-    speaker_view.click()
+    switch_to_speaker_view(driver)
 
-    # Close the sidebar
-    logging.debug("Closing sidebar")
-    sidebar_close = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "a.app-sidebar__close"))
-    )
-    sidebar_close.click()
+    close_sidebar(driver)
 
-    # Wait for sidebar to close, then go fullscreen
-    WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located(
-            (
-                By.CSS_SELECTOR,
-                ".top-bar.in-call button.top-bar__button.icon-menu-people",
-            )
-        )
-    )
+    # Go fullscreen
     page.send_keys("f")
 
     logging.debug("Loading custom CSS")
@@ -161,6 +127,54 @@ def change_name_of_user(driver):
     edit_name.click()
     driver.find_element_by_css_selector("input.username-form__input").send_keys(
         "Talked" + Keys.ENTER
+    )
+
+
+def join_call(driver):
+    # Wait for the green Join Call button to appear then click it
+    logging.debug("Waiting for join call button to appear")
+    join_call = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, "button.top-bar__button.success")
+        )
+    )
+    time.sleep(2)
+    logging.debug("Joining call")
+    join_call.click()
+
+    # Wait for the call to initiate
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".top-bar.in-call"))
+    )
+
+
+def switch_to_speaker_view(driver):
+    # Switch to speaker view
+    logging.debug("Switching to speaker view")
+    speaker_view = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, ".top-bar.in-call button.icon-promoted-view")
+        )
+    )
+    speaker_view.click()
+
+
+def close_sidebar(driver):
+    # Close the sidebar
+    logging.debug("Closing sidebar")
+    sidebar_close = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, "a.app-sidebar__close"))
+    )
+    sidebar_close.click()
+
+    # Wait for sidebar to close
+    WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located(
+            (
+                By.CSS_SELECTOR,
+                ".top-bar.in-call button.top-bar__button.icon-menu-people",
+            )
+        )
     )
 
 
