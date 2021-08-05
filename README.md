@@ -59,24 +59,6 @@ The last thing to do is create a file called `config.json` in the root of the pr
 
 Lastly remember to join the call before starting the program, as it will only join if there is a call in progress.
 
-## Todo
-
-- [x] Rename user when joining
-- [x] Handle filenames
-- [x] Add custom CSS to hide unwanted elements
-- [x] Figure out default transcoding settings
-- [x] Create config file
-- [ ] Integrate into Talk
-- [ ] Create setup for running on Nextcloud server or remote server
-- [ ] Create docker container
-
-## Later
-* Option to enable and disable recording of chat
-* Support using chromium based browser
-* Support using a authenticated user
-* Add options to control transcoding
-* When using authenticated user, add option to auto add the recording user when recording non public chat.
-
 ## License
 
 This program is licensed under the AGPLv3 or later.
