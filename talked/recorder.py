@@ -10,7 +10,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
 
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import (
+    TimeoutException,
+    NoSuchElementException,
+    ElementClickInterceptedException,
+)
 
 from pyvirtualdisplay import Display
 
@@ -175,10 +179,12 @@ def switch_to_speaker_view(driver):
 def close_sidebar(driver):
     # Close the sidebar
     logging.info("Closing sidebar")
-    sidebar_close = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "a.app-sidebar__close"))
-    )
-    sidebar_close.click()
+    try:
+        driver.find_element_by_css_selector("a.app-sidebar__close").click()
+    except ElementClickInterceptedException:
+        logging.info("Assuming toast is covering close button")
+        close_toasts(driver)
+        driver.find_element_by_css_selector("a.app-sidebar__close").click()
 
     # Wait for sidebar to close
     WebDriverWait(driver, 10).until(
@@ -189,6 +195,16 @@ def close_sidebar(driver):
             )
         )
     )
+
+
+def close_toasts(driver):
+    while True:
+        logging.info("Closing toast")
+        try:
+            driver.find_element_by_css_selector("span.toast-close").click()
+        except NoSuchElementException:
+            logging.info("No more open toasts")
+            break
 
 
 def load_custom_css(driver):

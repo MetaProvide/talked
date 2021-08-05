@@ -1,6 +1,6 @@
 import json
 import logging
-from talked import recorder
+import recorder
 
 
 def main():
