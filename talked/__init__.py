@@ -1,4 +1,5 @@
 import json
+import logging
 from talked import recorder
 
 
@@ -8,6 +9,8 @@ def main():
             config = json.load(config_file)
         except ValueError:
             exit("Invalid json in config file.")
+
+    logging.basicConfig(level=config["log_level"])
 
     recorder.start(config)
 

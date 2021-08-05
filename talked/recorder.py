@@ -17,14 +17,14 @@ from pyvirtualdisplay import Display
 
 def start(config):
     # Make sure an instance of Pulseaudio is running.
-    logging.debug("Starting pulseaudio")
+    logging.info("Starting pulseaudio")
     subprocess.run(["pulseaudio", "--start"])
 
-    logging.debug("Starting virtual x server")
+    logging.info("Starting virtual x server")
     with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
-        logging.debug("Starting browser")
+        logging.info("Starting browser")
         browser = launch_browser(config["call_link"])
-        logging.debug("Starting ffmpeg process")
+        logging.info("Starting ffmpeg process")
         ffmpeg = subprocess.Popen(
             [
                 "ffmpeg",
@@ -68,16 +68,16 @@ def start(config):
                 f"{time.strftime('%Y%m%dT%H%M%S')}_output.mp4",
             ]
         )
-        logging.info("Recording has started")
+        print("Recording has started")
         time.sleep(30)
-        logging.debug("Stop ffmpeg process")
+        logging.info("Stop ffmpeg process")
         ffmpeg.terminate()
-        logging.debug("Stop browser")
+        logging.info("Stop browser")
         browser.close()
 
 
 def launch_browser(call_link):
-    logging.debug("Configuring browser options")
+    logging.info("Configuring browser options")
     options = Options()
     options.set_preference("media.navigator.permission.disabled", True)
     options.set_preference("privacy.webrtc.legacyGlobalIndicator", False)
@@ -86,13 +86,13 @@ def launch_browser(call_link):
     options.add_argument("--width=1920")
     options.add_argument("--height=1080")
 
-    logging.debug("Creating browser")
+    logging.info("Creating browser")
     driver = Firefox(options=options)
-    logging.debug("Navigate to call link")
+    logging.info("Navigate to call link")
     driver.get(call_link)
 
     # Change the name of the recording user
-    logging.debug("Changing name of recording user")
+    logging.info("Changing name of recording user")
     change_name_of_user(driver)
 
     join_call(driver)
@@ -112,7 +112,7 @@ def launch_browser(call_link):
     # Go fullscreen
     page.send_keys("f")
 
-    logging.debug("Loading custom CSS")
+    logging.info("Loading custom CSS")
     load_custom_css(driver)
 
     # Give it some time to properly connect to participants.
@@ -134,7 +134,7 @@ def change_name_of_user(driver):
 
 def join_call(driver):
     # Wait for the green Join Call button to appear then click it
-    logging.debug("Waiting for join call button to appear")
+    logging.info("Waiting for join call button to appear")
     try:
         join_call = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located(
@@ -147,7 +147,7 @@ def join_call(driver):
         )
 
     time.sleep(2)
-    logging.debug("Joining call")
+    logging.info("Joining call")
     join_call.click()
 
     # Wait for the call to initiate
@@ -161,7 +161,7 @@ def join_call(driver):
 
 def switch_to_speaker_view(driver):
     # Switch to speaker view
-    logging.debug("Switching to speaker view")
+    logging.info("Switching to speaker view")
     speaker_view = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
             (By.CSS_SELECTOR, ".top-bar.in-call button.icon-promoted-view")
@@ -172,7 +172,7 @@ def switch_to_speaker_view(driver):
 
 def close_sidebar(driver):
     # Close the sidebar
-    logging.debug("Closing sidebar")
+    logging.info("Closing sidebar")
     sidebar_close = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, "a.app-sidebar__close"))
     )
