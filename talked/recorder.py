@@ -10,6 +10,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
 
+from selenium.common.exceptions import TimeoutException
+
 from pyvirtualdisplay import Display
 
 
@@ -133,19 +135,28 @@ def change_name_of_user(driver):
 def join_call(driver):
     # Wait for the green Join Call button to appear then click it
     logging.debug("Waiting for join call button to appear")
-    join_call = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, "button.top-bar__button.success")
+    try:
+        join_call = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "button.top-bar__button.success")
+            )
         )
-    )
+    except TimeoutException:
+        graceful_shutdown(
+            driver, "There doesn't seem to be an active called in the requested room."
+        )
+
     time.sleep(2)
     logging.debug("Joining call")
     join_call.click()
 
     # Wait for the call to initiate
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, ".top-bar.in-call"))
-    )
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".top-bar.in-call"))
+        )
+    except TimeoutException:
+        graceful_shutdown(driver, "Failed to initiate call.")
 
 
 def switch_to_speaker_view(driver):
@@ -182,3 +193,8 @@ def load_custom_css(driver):
     with open("custom_css.js") as f:
         javascript = "".join(line.strip() for line in f)
     driver.execute_script(javascript)
+
+
+def graceful_shutdown(driver, error_msg):
+    driver.close()
+    sys.exit(error_msg)
