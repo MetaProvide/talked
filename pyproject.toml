@@ -3,7 +3,7 @@ name = "talked"
 version = "0.1.0"
 description = "Call recording for Nextcloud Talk"
 authors = ["Magnus Walbeck <mw@mwalbeck.org>"]
-license = "AGPLv3-or-later"
+license = "AGPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.8"

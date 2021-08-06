@@ -1,10 +1,12 @@
 FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV POETRY_VIRTUALENVS_CREATE=false
+ENV POETRY_VIRTUALENVS_IN_PROJECT=false
 
 # hadolint ignore=DL3013
 RUN set -ex; \
+    groupadd talked; \
+    useradd --shell /bin/bash --gid talked --create-home talked; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
         python3 \
@@ -17,13 +19,14 @@ RUN set -ex; \
     ; \
     pip3 install --no-cache-dir poetry; \
     rm -rf /var/lib/apt/lists/*; \
-    mkdir /talked; \
-    chmod 777 /talked; \
-    groupadd --gid 1001 talked; \
-    useradd -s /bin/bash --uid 1000 --gid talked -m talked; \
     echo talked ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/talked;
 
-WORKDIR /talked
-USER talked:talked
+RUN set -ex; \
+    mkdir -p /home/talked/talked; \
+    chown talked:talked /home/talked/talked;
 
-CMD [ "/bin/bash" ]
+WORKDIR /home/talked/talked
+
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]

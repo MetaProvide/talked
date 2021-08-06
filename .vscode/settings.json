@@ -1,11 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "[python]": {
-    "editor.tabSize": 4,
-    "editor.rulers": [
-      88
-    ]
-  },
   "python.linting.flake8Enabled": true,
   "python.linting.enabled": true,
   "python.formatting.provider": "black",
