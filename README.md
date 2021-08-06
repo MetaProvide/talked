@@ -35,8 +35,14 @@ When you enter the container you will be placed in the /home/talked/talked folde
 poetry install
 ```
 
-Then you can run the program as below:
+Then you can run the program either using:
 ```
+poetry run python3 talked/__init__.py
+```
+Or by entering the virtualenv and then running the program:
+```
+poetry shell
+
 python3 talked/__init__.py
 ```
 
