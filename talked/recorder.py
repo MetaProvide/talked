@@ -2,7 +2,6 @@ import time
 import subprocess
 import logging
 import sys
-from threading import Thread
 from talked import config
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
@@ -18,12 +17,6 @@ from selenium.common.exceptions import (
 )
 
 from pyvirtualdisplay import Display
-
-
-def init():
-    recording_thread = Thread(target=start())
-    recording_thread.start()
-    return
 
 
 def start():

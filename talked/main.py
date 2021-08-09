@@ -2,6 +2,7 @@ from flask import Flask
 from talked import __version__
 from talked import config
 from talked import recorder
+from threading import Thread
 
 app = Flask(__name__)
 
@@ -10,14 +11,15 @@ config["talk_room"] = ""
 
 
 def main():
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", threaded=False)
 
 
 @app.route("/start", methods=["GET"])
 def start():
     global config
     config["recording"] = True
-    recorder.init()
+    recording_thread = Thread(target=recorder.start)
+    recording_thread.start()
     print("FOR THE LOVE OF GOD JUST RETURN")
     return "Setting up recorder..."
 
