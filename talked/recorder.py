@@ -2,7 +2,8 @@ import time
 import subprocess
 import logging
 import sys
-
+from threading import Thread
+from talked import config
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -19,7 +20,13 @@ from selenium.common.exceptions import (
 from pyvirtualdisplay import Display
 
 
-def start(config):
+def init():
+    recording_thread = Thread(target=start())
+    recording_thread.start()
+    return
+
+
+def start():
     # Make sure an instance of Pulseaudio is running.
     logging.info("Starting pulseaudio")
     subprocess.run(["pulseaudio", "--start"])
@@ -27,6 +34,8 @@ def start(config):
     logging.info("Starting virtual x server")
     with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
         logging.info("Starting browser")
+        logging.info(config["call_link"])
+        logging.info(config["recording"])
         browser = launch_browser(config["call_link"])
         logging.info("Starting ffmpeg process")
         ffmpeg = subprocess.Popen(
@@ -73,7 +82,11 @@ def start(config):
             ]
         )
         print("Recording has started")
-        time.sleep(30)
+
+        while config["recording"]:
+            logging.info("Still recording")
+            time.sleep(1)
+
         logging.info("Stop ffmpeg process")
         ffmpeg.terminate()
         logging.info("Stop browser")

@@ -1,19 +1,12 @@
 import json
 import logging
-import recorder
 
+__version__ = "0.1.0"
 
-def main():
-    with open("config.json") as config_file:
-        try:
-            config = json.load(config_file)
-        except ValueError:
-            exit("Invalid json in config file.")
+with open("config.json") as config_file:
+    try:
+        config = json.load(config_file)
+    except ValueError:
+        exit("Invalid json in config file.")
 
-    logging.basicConfig(level=config["log_level"])
-
-    recorder.start(config)
-
-
-if __name__ == "__main__":
-    main()
+logging.basicConfig(level=config["log_level"])
