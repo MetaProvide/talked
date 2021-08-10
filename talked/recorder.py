@@ -2,7 +2,6 @@ import time
 import subprocess
 import logging
 import sys
-from talked import config
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -19,7 +18,10 @@ from selenium.common.exceptions import (
 from pyvirtualdisplay import Display
 
 
-def start(queue, recording):
+def start(base_url, token, queue, recording):
+    # Assemble link for call to record
+    call_link = assemble_call_link(base_url, token)
+
     # Make sure an instance of Pulseaudio is running.
     logging.info("Starting pulseaudio")
     subprocess.run(["pulseaudio", "--start"])
@@ -27,8 +29,8 @@ def start(queue, recording):
     logging.info("Starting virtual x server")
     with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
         logging.info("Starting browser")
-        logging.info(config["call_link"])
-        browser = launch_browser(config["call_link"])
+        logging.info(call_link)
+        browser = launch_browser(call_link)
         logging.info("Starting ffmpeg process")
         ffmpeg = subprocess.Popen(
             [
@@ -128,6 +130,10 @@ def launch_browser(call_link):
     # Give it some time to properly connect to participants.
     time.sleep(5)
     return driver
+
+
+def assemble_call_link(base_url, token):
+    return base_url + "/call/" + token
 
 
 def change_name_of_user(driver):
