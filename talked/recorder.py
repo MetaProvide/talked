@@ -19,7 +19,7 @@ from selenium.common.exceptions import (
 from pyvirtualdisplay import Display
 
 
-def start():
+def start(queue, recording):
     # Make sure an instance of Pulseaudio is running.
     logging.info("Starting pulseaudio")
     subprocess.run(["pulseaudio", "--start"])
@@ -28,7 +28,6 @@ def start():
     with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
         logging.info("Starting browser")
         logging.info(config["call_link"])
-        logging.info(config["recording"])
         browser = launch_browser(config["call_link"])
         logging.info("Starting ffmpeg process")
         ffmpeg = subprocess.Popen(
@@ -76,14 +75,15 @@ def start():
         )
         print("Recording has started")
 
-        while config["recording"]:
-            logging.info("Still recording")
-            time.sleep(1)
+        queue.put("Recording has started")
+
+        recording.wait()
 
         logging.info("Stop ffmpeg process")
         ffmpeg.terminate()
         logging.info("Stop browser")
         browser.close()
+        queue.put("Recording has stopped")
 
 
 def launch_browser(call_link):
