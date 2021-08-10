@@ -8,19 +8,23 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
-
 from selenium.common.exceptions import (
     TimeoutException,
     NoSuchElementException,
     ElementClickInterceptedException,
 )
-
 from pyvirtualdisplay import Display
+from talked import config
+
+msg_queue = None
 
 
-def start(base_url, token, queue, recording):
+def start(token, queue, recording):
+    global msg_queue
+    msg_queue = queue
+
     # Assemble link for call to record
-    call_link = assemble_call_link(base_url, token)
+    call_link = assemble_call_link(config["base_url"], token)
 
     # Make sure an instance of Pulseaudio is running.
     logging.info("Starting pulseaudio")
@@ -75,9 +79,14 @@ def start(base_url, token, queue, recording):
                 f"{time.strftime('%Y%m%dT%H%M%S')}_output.mp4",
             ]
         )
-        print("Recording has started")
+        logging.info("Recording has started")
 
-        queue.put("Recording has started")
+        msg_queue.put(
+            {
+                "status": "ok",
+                "message": "Recording has started.",
+            }
+        )
 
         recording.wait()
 
@@ -85,7 +94,12 @@ def start(base_url, token, queue, recording):
         ffmpeg.terminate()
         logging.info("Stop browser")
         browser.close()
-        queue.put("Recording has stopped")
+        msg_queue.put(
+            {
+                "status": "ok",
+                "message": "Recording has stopped.",
+            }
+        )
 
 
 def launch_browser(call_link):
@@ -158,9 +172,14 @@ def join_call(driver):
             )
         )
     except TimeoutException:
-        graceful_shutdown(
-            driver, "There doesn't seem to be an active called in the requested room."
+        msg_queue.put(
+            {
+                "status": "error",
+                "message": "There doesn't seem to be an active call in the room.",
+            }
         )
+        logging.warn("There doesn't seem to be an active call in the room.")
+        graceful_shutdown(driver)
 
     time.sleep(2)
     logging.info("Joining call")
@@ -172,7 +191,14 @@ def join_call(driver):
             EC.presence_of_element_located((By.CSS_SELECTOR, ".top-bar.in-call"))
         )
     except TimeoutException:
-        graceful_shutdown(driver, "Failed to initiate call.")
+        msg_queue.put(
+            {
+                "status": "error",
+                "message": "Failed to initiate call.",
+            }
+        )
+        logging.warn("Failed to initiate call.")
+        graceful_shutdown(driver)
 
 
 def switch_to_speaker_view(driver):
@@ -225,6 +251,7 @@ def load_custom_css(driver):
     driver.execute_script(javascript)
 
 
-def graceful_shutdown(driver, error_msg):
+def graceful_shutdown(driver):
+    logging.info("Shutting down...")
     driver.close()
-    sys.exit(error_msg)
+    sys.exit()

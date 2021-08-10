@@ -10,6 +10,7 @@ python = "^3.8"
 selenium = "^3.141.0"
 PyVirtualDisplay = "^2.2"
 Flask = "^2.0.1"
+uWSGI = "^2.0.19"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.9.2"
