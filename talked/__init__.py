@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import sys
 
 __version__ = "0.1.0"
 
@@ -15,3 +16,7 @@ if os.getenv("TALKED_CONFIG_PATH"):
     config.update(custom_config)
 
 logging.basicConfig(level=config["log_level"])
+
+if not config.get("base_url"):
+    logging.critical("base_url is required!")
+    sys.exit()

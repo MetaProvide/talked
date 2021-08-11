@@ -27,13 +27,10 @@ def start():
 
         return jsonify(message=response)
 
-    base_url = request.get_json()["base_url"]
     token = request.get_json()["token"]
 
     recording.clear()
-    recording_thread = Thread(
-        target=recorder.start, args=(base_url, token, queue, recording)
-    )
+    recording_thread = Thread(target=recorder.start, args=(token, queue, recording))
     recording_thread.start()
     output = queue.get()
 
@@ -48,15 +45,18 @@ def start():
 def stop():
     global token
 
-    if request.get_json()["token"] == token:
-        recording.set()
-        token = ""
-        output = queue.get()
-        return jsonify(message=output["message"])
+    if not recording.is_set():
+        if request.get_json()["token"] == token:
+            recording.set()
+            token = ""
+            output = queue.get()
+            response = output["message"]
+        else:
+            response = "A recording is currently active in another room and can only be stopped from that room."
 
-    return jsonify(
-        message="A recording is currently active in another room and can only be stopped from that room."
-    )
+        return jsonify(message=response)
+
+    return jsonify(message="No recording is currently active")
 
 
 @app.route("/status", methods=["POST"])

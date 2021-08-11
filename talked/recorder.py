@@ -14,16 +14,17 @@ from selenium.common.exceptions import (
     ElementClickInterceptedException,
 )
 from pyvirtualdisplay import Display
+from talked import config
 
 msg_queue = None
 
 
-def start(base_url, token, queue, recording):
+def start(token, queue, recording):
     global msg_queue
     msg_queue = queue
 
     # Assemble link for call to record
-    call_link = assemble_call_link(base_url, token)
+    call_link = assemble_call_link(config["base_url"], token)
 
     # Make sure an instance of Pulseaudio is running.
     logging.info("Starting pulseaudio")
