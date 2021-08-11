@@ -246,7 +246,7 @@ def close_toasts(driver):
 
 
 def load_custom_css(driver):
-    with open("custom_css.js") as f:
+    with open("static/custom_css.js") as f:
         javascript = "".join(line.strip() for line in f)
     driver.execute_script(javascript)
 
