@@ -27,10 +27,13 @@ def start():
 
         return jsonify(message=response)
 
+    base_url = request.get_json()["base_url"]
     token = request.get_json()["token"]
 
     recording.clear()
-    recording_thread = Thread(target=recorder.start, args=(token, queue, recording))
+    recording_thread = Thread(
+        target=recorder.start, args=(base_url, token, queue, recording)
+    )
     recording_thread.start()
     output = queue.get()
 
