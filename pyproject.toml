@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Call recording for Nextcloud Talk"
 authors = ["Magnus Walbeck <mw@mwalbeck.org>"]
 license = "AGPL-3.0-or-later"
-include = ["static"]
 
 [tool.poetry.dependencies]
 python = "^3.8"

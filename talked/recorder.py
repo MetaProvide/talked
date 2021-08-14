@@ -2,6 +2,7 @@ import time
 import subprocess
 import logging
 import sys
+import pkgutil
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -159,7 +160,7 @@ def assemble_call_link(base_url, token):
 
 def is_valid_talk_room(driver):
     """Checks if the loaded page is a valid Talk room.
-    It looks for the icon in the start call button, if it isn't there
+    It looks for the start call / join call button, if it isn't there
     it throws a TimeoutException notifies the HTTP api
     and shuts down the browser.
 
@@ -169,7 +170,7 @@ def is_valid_talk_room(driver):
     try:
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located(
-                (By.CSS_SELECTOR, ".top-bar .icon-start-call")
+                (By.CSS_SELECTOR, ".app-talk .top-bar .top-bar__button")
             )
         )
     except TimeoutException:
@@ -282,8 +283,7 @@ def close_toasts(driver):
 
 
 def load_custom_css(driver):
-    with open("static/custom_css.js") as f:
-        javascript = "".join(line.strip() for line in f)
+    javascript = pkgutil.get_data("talked", "static/custom_css.js").decode("UTF-8")
     driver.execute_script(javascript)
 
 
