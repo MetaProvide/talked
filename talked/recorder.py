@@ -121,6 +121,9 @@ def launch_browser(call_link):
     logging.info("Navigate to call link")
     driver.get(call_link)
 
+    # Check if loaded page is a valid Talk room
+    is_valid_talk_room(driver)
+
     # Change the name of the recording user
     logging.info("Changing name of recording user")
     change_name_of_user(driver)
@@ -152,6 +155,32 @@ def launch_browser(call_link):
 
 def assemble_call_link(base_url, token):
     return base_url + "/call/" + token
+
+
+def is_valid_talk_room(driver):
+    """Checks if the loaded page is a valid Talk room.
+    It looks for the icon in the start call button, if it isn't there
+    it throws a TimeoutException notifies the HTTP api
+    and shuts down the browser.
+
+    Accepts the current browser driver.
+    """
+
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, ".top-bar .icon-start-call")
+            )
+        )
+    except TimeoutException:
+        msg_queue.put(
+            {
+                "status": "error",
+                "message": "Failed to load the Talk room.",
+            }
+        )
+        logging.warning("Failed to load the Talk room.")
+        graceful_shutdown(driver)
 
 
 def change_name_of_user(driver):
