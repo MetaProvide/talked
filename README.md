@@ -17,6 +17,8 @@ Call recording for Nextcloud Talk
 
 * selenium
 * PyVirtualDisplay
+* Flask
+* uWSGI
 
 ## Dev setup
 
@@ -35,6 +37,17 @@ When you enter the container you will be placed in the /home/talked/talked folde
 poetry install
 ```
 
+Then create a config file called `config.json` in the root of the project which contains the base url for your nextcloud instance. Below you can see the boilerplate:
+```
+{
+  "base_url": "https://nextcloud.example.com"
+}
+```
+Then set the `TALKED_CONFIG_PATH` to tell talked where to find the config file
+```
+export TALKED_CONFIG_PATH=config.json
+```
+
 Then you can run the program either using:
 ```
 poetry run python3 -m talked
@@ -44,16 +57,6 @@ Or by entering the virtualenv and then running the program:
 poetry shell
 
 python3 -m talked
-```
-
-### Both
-
-The last thing to do is create a file called `config.json` in the root of the project which contains a link to a public Nextcloud Talk room. Below you can see the boilerplate:
-```
-{
-  "base_url": "",
-  "log_level": 20
-}
 ```
 
 Lastly remember to join the call before starting the program, as it will only join if there is a call in progress.

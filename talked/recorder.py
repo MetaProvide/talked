@@ -31,7 +31,11 @@ def start(token, queue, recording):
     subprocess.run(["pulseaudio", "--start"])
 
     logging.info("Starting virtual x server")
-    with Display(backend="xvfb", size=(1920, 1080), color_depth=24) as display:
+    with Display(
+        backend="xvfb",
+        size=(config["video_width"], config["video_height"]),
+        color_depth=config["color_depth"],
+    ) as display:
         logging.info("Starting browser")
         logging.info(call_link)
         browser = launch_browser(call_link)
@@ -49,13 +53,13 @@ def start(token, queue, recording):
                 "-f",
                 "x11grab",
                 "-video_size",
-                "1920x1080",
+                f"{config['video_width']}x{config['video_height']}",
                 "-framerate",
-                "30",
+                str(config["framerate"]),
                 "-draw_mouse",
                 "0",
                 "-thread_queue_size",
-                "4096",
+                str(config["video_thread_queue_size"]),
                 "-i",
                 display.env()["DISPLAY"],
                 "-f",
@@ -65,17 +69,17 @@ def start(token, queue, recording):
                 "-channel_layout",
                 "stereo",
                 "-thread_queue_size",
-                "4096",
+                str(config["audio_thread_queue_size"]),
                 "-i",
                 "0",
                 "-c:v",
                 "libx264",
                 "-crf",
-                "25",
+                str(config["crf"]),
                 "-preset",
-                "veryfast",
+                config["encoding_preset"],
                 "-threads",
-                "1",
+                str(config["encoding_threads"]),
                 f"{time.strftime('%Y%m%dT%H%M%S')}_output.mp4",
             ]
         )
