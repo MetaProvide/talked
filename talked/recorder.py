@@ -210,7 +210,10 @@ def switch_to_speaker_view(driver):
         ).click()
     except NoSuchElementException:
         logging.info(
-            "Speaker view button wasn't found. Assuming we are already in speaker view."
+            (
+                "Speaker view button wasn't found. "
+                "Assuming we are already in speaker view."
+            )
         )
 
 

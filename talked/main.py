@@ -52,7 +52,10 @@ def stop():
             output = queue.get()
             response = output["message"]
         else:
-            response = "A recording is currently active in another room and can only be stopped from that room."
+            response = (
+                "A recording is currently active in another room and "
+                "can only be stopped from that room."
+            )
 
         return jsonify(message=response)
 
