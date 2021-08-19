@@ -15,6 +15,7 @@ LOG_LEVELS = {
 
 config = {
     "log_level": "warning",
+    "recording_dir": ".",
     "video_width": 1280,
     "video_height": 720,
     "color_depth": 24,
@@ -38,4 +39,10 @@ logging.basicConfig(level=LOG_LEVELS[config["log_level"]])
 
 if not config.get("base_url"):
     logging.critical("base_url is required!")
+    sys.exit()
+
+if not os.path.isdir(config["recording_dir"]):
+    logging.critical(
+        "The specified recording directory doesn't exist, please create it!"
+    )
     sys.exit()

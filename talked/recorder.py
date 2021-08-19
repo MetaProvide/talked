@@ -81,7 +81,10 @@ def start(token, queue, recording):
                 config["encoding_preset"],
                 "-threads",
                 str(config["encoding_threads"]),
-                f"{time.strftime('%Y%m%dT%H%M%S')}_output.mp4",
+                (
+                    f"{config['recording_dir']}/"
+                    f"{time.strftime('%Y%m%dT%H%M%S')}_output.mp4"
+                ),
             ]
         )
         logging.info("Recording has started")
