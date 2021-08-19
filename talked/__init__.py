@@ -38,7 +38,7 @@ if os.getenv("TALKED_CONFIG_PATH"):
 logging.basicConfig(level=LOG_LEVELS[config["log_level"]])
 
 if not config.get("base_url"):
-    logging.critical("base_url is required!")
+    logging.critical("base_url is required! Please specify it in the config file.")
     sys.exit()
 
 if not os.path.isdir(config["recording_dir"]):

@@ -43,12 +43,9 @@ Then create a config file called `config.json` in the root of the project which 
   "base_url": "https://nextcloud.example.com"
 }
 ```
-Then set the `TALKED_CONFIG_PATH` to tell talked where to find the config file
-```
-export TALKED_CONFIG_PATH=config.json
-```
+The config file location is controlled by the `TALKED_CONFIG_PATH` env var and by default, in the container, it is set to the root of the project folder.
 
-Then you can run the program either using:
+Now you can run the program either using:
 ```
 poetry run python3 -m talked
 ```
