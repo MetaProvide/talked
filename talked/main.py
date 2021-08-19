@@ -78,4 +78,4 @@ def status():
 
 @app.route("/", methods=["GET"])
 def info():
-    return jsonify(version=__version__)
+    return jsonify(message=f"version: {__version__}")
