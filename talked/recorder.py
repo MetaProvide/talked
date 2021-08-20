@@ -158,7 +158,7 @@ def launch_browser(call_link):
 
 
 def assemble_call_link(base_url, token):
-    return base_url + "/call/" + token
+    return base_url + "index.php/call/" + token
 
 
 def is_valid_talk_room(driver):
