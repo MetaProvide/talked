@@ -73,8 +73,12 @@ def start(token, queue, recording):
                 str(config["audio_thread_queue_size"]),
                 "-i",
                 "0",
+                "-c:a",
+                config["audio_codec"],
+                "-b:a",
+                config["audio_bitrate"],
                 "-c:v",
-                "libx264",
+                config["video_codec"],
                 "-crf",
                 str(config["crf"]),
                 "-preset",
@@ -158,7 +162,7 @@ def launch_browser(call_link):
 
 
 def assemble_call_link(base_url, token):
-    return base_url + "index.php/call/" + token
+    return base_url + "/index.php/call/" + token
 
 
 def is_valid_talk_room(driver):

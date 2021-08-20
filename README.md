@@ -75,9 +75,12 @@ You can have a look at the following instructions for nginx: https://docs.nginx.
 | video_height            | 720        | The virtual display and recording height in pixels.                                                 |
 | color_depth             | 24         | The color depth to use for the virtual framebuffer.                                                 |
 | framerate               | 30         | The framerate that should be used for the recording.                                                |
-| video_thread_queue_size | 1024       |                                                                                                     |
-| audio_thread_queue_size | 1024       |                                                                                                     |
+| audio_codec             | "aac"      | The audio codec to use for the recording.                                                           |
+| audio_bitrate           | "160k"     | The audio bitrate to use.                                                                           |
+| audio_thread_queue_size | 128        |                                                                                                     |
+| video_codec             | "libx264"  | The video codec to use for the recording.                                                           |
 | crf                     | 25         | The crf to use for the H.264 encoding.                                                              |
+| video_thread_queue_size | 32         |                                                                                                     |
 | encoding_preset         | "veryfast" | The encoding preset used for the H.264 encoding.                                                    |
 | encoding_threads        | 0          | How many threads to use for the encoding. 0 is auto.                                                |
 
