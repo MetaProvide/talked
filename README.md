@@ -137,7 +137,7 @@ Group=talked
 
 Environment=TALKED_CONFIG_PATH=/opt/talked/config.json
 
-ProtectSystem=strict
+ProtectSystem=full
 ProtectHome=true
 ProtectKernelTunables=true
 ProtectKernelModules=true

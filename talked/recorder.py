@@ -73,6 +73,8 @@ def start(token, queue, recording):
                 str(config["audio_thread_queue_size"]),
                 "-i",
                 "0",
+                "-pix_fmt",
+                "yuv420p",
                 "-c:a",
                 config["audio_codec"],
                 "-b:a",
