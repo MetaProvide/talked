@@ -2,13 +2,19 @@
 
 ## [Unreleased]
 
+## 0.1.5 - 2021-08-25
+
+### Fixed
+
+-   [#19](https://github.com/MetaProvide/talked/issues/19) Make the .stripe-wrapper rule important to make sure it applies, and hide grid navigation arrow.
+
 ## 0.1.4 - 2021-08-23
 
-## Added
+### Added
 
 -   Proper CHANGELOG
 
-## Fixed
+### Fixed
 
 -   Switch to using yuv420 instead of yuv444 for recording so it can be played in Firefox.
 -   Change ProtectHome from strict to full in the example systemd unit file.
