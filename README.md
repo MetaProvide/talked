@@ -25,7 +25,7 @@ These instructions are made for Ubuntu 20.04, but they should hopefully be fairl
 
 First let's install the required dependencies
 ```
-sudo apt install build-essential python3 python3-dev python3-venv python3-wheel firefox-geckodriver pulseaudio xvfb ffmpeg uwsgi
+sudo apt install build-essential python3 python3-dev python3-venv python3-wheel firefox-geckodriver pulseaudio xvfb ffmpeg
 ```
 
 Then let's create an unprivileged user to run Talked with.
@@ -41,9 +41,9 @@ Then activate it
 ```
 source /opt/talked/talked/bin/activate
 ```
-And install talked
+And install talked and uwsgi
 ```
-pip3 install talked
+pip3 install talked wheel uwsgi
 ```
 
 Now let's create the config file at `/opt/talked/config.json`. The only required parameter is `base_url` but it might be useful to change some of the other options as well. You can see a list of the available options further down. The most basic config would look like this:
@@ -113,11 +113,11 @@ Now you can run the program either using:
 ```
 poetry run python3 -m talked
 ```
-Or by entering the virtualenv and then running the program:
+Or by entering the virtualenv and then running the program. We bind the internal server to all interfaces so it can be easily access outside the docker container:
 ```
 poetry shell
 
-python3 -m talked
+python3 -m talked --host 0.0.0.0
 ```
 
 Lastly remember to join the call before starting the program, as it will only join if there is a call in progress.
