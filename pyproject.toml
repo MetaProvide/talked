@@ -7,6 +7,9 @@ license = "AGPL-3.0-or-later"
 readme = "README.md"
 repository = "https://github.com/MetaProvide/talked"
 
+[tool.poetry.scripts]
+talked = 'talked:__main__'
+
 [tool.poetry.dependencies]
 python = "^3.8"
 selenium = "^3.141.0"
