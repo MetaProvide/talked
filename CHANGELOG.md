@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+
+-   [#25](https://github.com/MetaProvide/talked/issues/25) Executable that gets installed on install
+-   [#28](https://github.com/MetaProvide/talked/issues/28) Commandline arguments to control host and port the internal server will bind to.
+
+### Changed
+
+-   [#27](https://github.com/MetaProvide/talked/issues/27) Remove uWSGI as a runtime dependency in pyproject file
+
 ## 0.1.5 - 2021-08-25
 
 ### Fixed
