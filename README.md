@@ -25,7 +25,7 @@ These instructions are made for Ubuntu 20.04, but they should hopefully be fairl
 
 First let's install the required dependencies
 ```
-sudo apt install build-essential python3 python3-dev python3-venv python3-wheel firefox-geckodriver pulseaudio xvfb ffmpeg
+sudo apt install build-essential python3 python3-dev python3-venv python3-wheel firefox-geckodriver pulseaudio xvfb ffmpeg uwsgi
 ```
 
 Then let's create an unprivileged user to run Talked with.
@@ -41,9 +41,9 @@ Then activate it
 ```
 source /opt/talked/talked/bin/activate
 ```
-And install wheel and talked
+And install talked
 ```
-pip3 install wheel talked
+pip3 install talked
 ```
 
 Now let's create the config file at `/opt/talked/config.json`. The only required parameter is `base_url` but it might be useful to change some of the other options as well. You can see a list of the available options further down. The most basic config would look like this:

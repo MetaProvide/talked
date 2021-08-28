@@ -19,6 +19,7 @@ RUN set -ex; \
         xvfb \
         ffmpeg \
         sudo \
+        uwsgi \
     ; \
     pip3 install --no-cache-dir poetry; \
     rm -rf /var/lib/apt/lists/*; \
