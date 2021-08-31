@@ -3,6 +3,7 @@ import subprocess
 import logging
 import sys
 import pkgutil
+import os
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -36,7 +37,7 @@ def start(token, queue, recording):
         backend="xvfb",
         size=(config["video_width"], config["video_height"]),
         color_depth=config["color_depth"],
-    ) as display:
+    ):
         logging.info("Starting browser")
         logging.info(call_link)
         browser = launch_browser(call_link)
@@ -62,7 +63,7 @@ def start(token, queue, recording):
                 "-thread_queue_size",
                 str(config["video_thread_queue_size"]),
                 "-i",
-                display.env()["DISPLAY"],
+                os.environ["DISPLAY"],
                 "-f",
                 "pulse",
                 "-ac",
