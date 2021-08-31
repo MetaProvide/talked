@@ -6,7 +6,7 @@ about: Request a new feature
 
 ### Problem
 
-What problem does talk not yet solve for you?
+What problem does Talked not yet solve for you?
 
 ### Solution
 
