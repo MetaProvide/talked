@@ -85,20 +85,21 @@ You can have a look at the following instructions for nginx: https://docs.nginx.
 | encoding_threads        | 0          | How many threads to use for the encoding. 0 is auto.                                                |
 
 ## Development setup
+To setup a dev environment for coding, clone the repository and then run `make dev-setup` to setup a virtual environment with the needed dependencies.
 
-Make sure you have docker installed for your OS. Then build the generic docker container using this command
+For testing, a docker container is included in the repository as Talked only works on Linux. To build and run the container make sure you have docker installed for your OS. Then build the docker container using this command:
 ```
-docker build docker -f docker/Dockerfile.dev -t talked
+make dev-build
 ```
 
 Then start the container using this command, it will take over the current terminal you have open. The command will start the docker container giving you a bash shell and a user with the same ID as your user on the host. The root of this project will also be passed through to the container in the /home/talked/talked folder. The container will get removed when you exit out of it, so you don't manually have to do it.
 ```
-docker run --rm -it -v "$(pwd):/home/talked/talked" -e "UID=$(id -u)" -e "GID=$(id -g)" -p "5000:5000" talked
+make dev-run
 ```
 
 When you enter the container you will be placed in the /home/talked/talked folder, to get started first install the python dependencies using poetry.
 ```
-poetry install
+poetry install --no-dev --no-root
 ```
 
 Then create a config file called `config.json` in the root of the project which contains the base URL for your Nextcloud instance. Below you can see the boilerplate:
@@ -111,7 +112,7 @@ The config file location is controlled by the `TALKED_CONFIG_PATH` env var and b
 
 Now you can run the program either using:
 ```
-poetry run python3 -m talked
+poetry run python3 -m talked --host 0.0.0.0
 ```
 Or by entering the virtualenv and then running the program. We bind the internal server to all interfaces so it can be easily access outside the docker container:
 ```
