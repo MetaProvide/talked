@@ -11,6 +11,10 @@
 
 -   [#27](https://github.com/MetaProvide/talked/issues/27) Remove uWSGI as a runtime dependency in pyproject file
 
+### Fixed
+
+-   [#21](https://github.com/MetaProvide/talked/issues/21) Remove hardcoded width and height parameters for launching Firefox
+
 ## 0.1.5 - 2021-08-25
 
 ### Fixed

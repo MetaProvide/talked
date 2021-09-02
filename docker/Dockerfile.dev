@@ -27,7 +27,9 @@ RUN set -ex; \
 
 RUN set -ex; \
     mkdir -p /home/talked/talked; \
-    chown talked:talked /home/talked/talked;
+    chown talked:talked /home/talked/talked; \
+    # Symlink python3 to python as poetry seems to be having some issues when python isn't present
+    ln -s /usr/bin/python3 /usr/bin/python;
 
 WORKDIR /home/talked/talked
 

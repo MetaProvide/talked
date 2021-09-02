@@ -124,8 +124,8 @@ def launch_browser(call_link):
     options.set_preference("privacy.webrtc.legacyGlobalIndicator", False)
     options.set_preference("full-screen-api.warning.timeout", 0)
     options.add_argument("--kiosk")
-    options.add_argument("--width=1920")
-    options.add_argument("--height=1080")
+    options.add_argument(f"--width={config['video_width']}")
+    options.add_argument(f"--height={config['video_height']}")
 
     logging.info("Creating browser")
     driver = Firefox(options=options)
