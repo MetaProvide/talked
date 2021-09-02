@@ -46,11 +46,9 @@ And install talked and uwsgi
 pip3 install talked wheel uwsgi
 ```
 
-Now let's create the config file at `/opt/talked/config.json`. The only required parameter is `base_url` but it might be useful to change some of the other options as well. You can see a list of the available options further down. The most basic config would look like this:
+Now let's create the config file at `/opt/talked/config.toml`. The only required parameter is `base_url` but it might be useful to change some of the other options as well. You can see a list of the available options further down. The most basic config would look like this:
 ```
-{
-    "base_url": "talked.example.com"
-}
+base_url = "talked.example.com"
 ```
 
 Talked uses the environment variable `TALKED_CONFIG_PATH` to find the config file. The easiest way to set it is to put it in the systemd service file used to start the talked server.
@@ -102,11 +100,9 @@ When you enter the container you will be placed in the /home/talked/talked folde
 poetry install --no-dev --no-root
 ```
 
-Then create a config file called `config.json` in the root of the project which contains the base URL for your Nextcloud instance. Below you can see the boilerplate:
+Then create a config file called `config.toml` in the root of the project which contains the base URL for your Nextcloud instance. Below you can see the boilerplate:
 ```
-{
-  "base_url": "https://nextcloud.example.com"
-}
+base_url = "https://nextcloud.example.com"
 ```
 The config file location is controlled by the `TALKED_CONFIG_PATH` env var and by default, in the container, it is set to the root of the project folder.
 
@@ -136,7 +132,7 @@ WorkingDirectory=/opt/talked
 User=talked
 Group=talked
 
-Environment=TALKED_CONFIG_PATH=/opt/talked/config.json
+Environment=TALKED_CONFIG_PATH=/opt/talked/config.toml
 
 ProtectSystem=full
 ProtectHome=true

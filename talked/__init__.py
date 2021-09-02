@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import sys
+from tomlkit import parse
 
 __version__ = "0.1.5"
 
@@ -32,10 +33,23 @@ config = {
 
 if os.getenv("TALKED_CONFIG_PATH"):
     with open(os.getenv("TALKED_CONFIG_PATH")) as config_file:
-        try:
-            custom_config = json.load(config_file)
-        except ValueError:
-            exit("Invalid json in config file.")
+        if os.path.splitext(os.getenv("TALKED_CONFIG_PATH"))[1] == ".toml":
+            try:
+                custom_config = parse(config_file.read())
+            except ValueError:
+                logging.critical("Invalid toml in config file.")
+                sys.exit()
+        elif os.path.splitext(os.getenv("TALKED_CONFIG_PATH"))[1] == ".json":
+            try:
+                custom_config = json.load(config_file)
+            except ValueError:
+                logging.critical("Invalid json in config file.")
+                sys.exit()
+            logging.warning("DEPRECATED: Please switch to a toml config file")
+        else:
+            logging.critical("Please provide a toml config file!")
+            sys.exit()
+
     config.update(custom_config)
 
 logging.basicConfig(level=LOG_LEVELS[config["log_level"]])

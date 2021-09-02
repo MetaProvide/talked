@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV POETRY_VIRTUALENVS_IN_PROJECT=false
-ENV TALKED_CONFIG_PATH=config.json
+ENV TALKED_CONFIG_PATH=config.toml
 
 # hadolint ignore=DL3013
 RUN set -ex; \

@@ -10,7 +10,12 @@
 
 ### Changed
 
+-   [#24](https://github.com/MetaProvide/talked/issues/24) Switch to toml for config file format
 -   [#27](https://github.com/MetaProvide/talked/issues/27) Remove uWSGI as a runtime dependency in pyproject file
+
+### Deprecated
+
+-   JSON config files. Please use a toml config file instead. Support for json config files will be removed in version 0.3
 
 ### Fixed
 
