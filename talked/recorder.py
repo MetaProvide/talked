@@ -6,6 +6,7 @@ import pkgutil
 import os
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
@@ -16,12 +17,14 @@ from selenium.common.exceptions import (
     ElementClickInterceptedException,
 )
 from pyvirtualdisplay import Display
+from threading import Event
+from queue import Queue
 from talked import config
 
 msg_queue = None
 
 
-def start(token, queue, recording):
+def start(token: str, queue: Queue, recording: Event) -> None:
     global msg_queue
     msg_queue = queue
 
@@ -117,7 +120,7 @@ def start(token, queue, recording):
         )
 
 
-def launch_browser(call_link):
+def launch_browser(call_link: str) -> WebDriver:
     logging.info("Configuring browser options")
     options = Options()
     options.set_preference("media.navigator.permission.disabled", True)
@@ -164,11 +167,11 @@ def launch_browser(call_link):
     return driver
 
 
-def assemble_call_link(base_url, token):
+def assemble_call_link(base_url: str, token: str) -> str:
     return base_url + "/index.php/call/" + token
 
 
-def is_valid_talk_room(driver):
+def is_valid_talk_room(driver: WebDriver) -> None:
     """Checks if the loaded page is a valid Talk room.
     It looks for the start call / join call button, if it isn't there
     it throws a TimeoutException notifies the HTTP api
@@ -194,7 +197,7 @@ def is_valid_talk_room(driver):
         graceful_shutdown(driver)
 
 
-def change_name_of_user(driver):
+def change_name_of_user(driver: WebDriver) -> None:
     edit_name = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located(
             (By.CSS_SELECTOR, ".username-form button.icon-rename")
@@ -206,7 +209,7 @@ def change_name_of_user(driver):
     )
 
 
-def join_call(driver):
+def join_call(driver: WebDriver) -> None:
     # Wait for the green Join Call button to appear then click it
     logging.info("Waiting for join call button to appear")
     try:
@@ -245,7 +248,7 @@ def join_call(driver):
         graceful_shutdown(driver)
 
 
-def switch_to_speaker_view(driver):
+def switch_to_speaker_view(driver: WebDriver) -> None:
     # Switch to speaker view
     logging.info("Switching to speaker view")
     try:
@@ -261,7 +264,7 @@ def switch_to_speaker_view(driver):
         )
 
 
-def close_sidebar(driver):
+def close_sidebar(driver: WebDriver) -> None:
     # Close the sidebar
     logging.info("Closing sidebar")
     try:
@@ -282,7 +285,7 @@ def close_sidebar(driver):
     )
 
 
-def close_toasts(driver):
+def close_toasts(driver: WebDriver) -> None:
     while True:
         logging.info("Closing toast")
         try:
@@ -292,12 +295,12 @@ def close_toasts(driver):
             break
 
 
-def load_custom_css(driver):
+def load_custom_css(driver: WebDriver) -> None:
     javascript = pkgutil.get_data("talked", "static/custom_css.js").decode("UTF-8")
     driver.execute_script(javascript)
 
 
-def graceful_shutdown(driver):
+def graceful_shutdown(driver: WebDriver) -> None:
     logging.info("Shutting down...")
     driver.close()
     sys.exit()
