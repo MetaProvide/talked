@@ -17,6 +17,7 @@ LOG_LEVELS = {
 config = {
     "log_level": "warning",
     "recording_dir": ".",
+    "grid_view": False,
     "video_width": 1280,
     "video_height": 720,
     "color_depth": 24,
