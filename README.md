@@ -64,23 +64,24 @@ You can have a look at the following instructions for nginx: https://docs.nginx.
 
 ## Configuration options
 
-| option                  | default    | description                                                                                         |
-| ----------------------- | ---------- | --------------------------------------------------------------------------------------------------- |
-| base_url                | ""         | The base URL of your Nextcloud instance. Should include the http / https and have no leading slash. |
-| log_level               | "warning"  | The log level that should be used.                                                                  |
-| recording_dir           | "."        | The directory where the recordings should be stored.                                                |
-| video_width             | 1280       | The virtual display and recording width in pixels.                                                  |
-| video_height            | 720        | The virtual display and recording height in pixels.                                                 |
-| color_depth             | 24         | The color depth to use for the virtual framebuffer.                                                 |
-| framerate               | 30         | The framerate that should be used for the recording.                                                |
-| audio_codec             | "aac"      | The audio codec to use for the recording.                                                           |
-| audio_bitrate           | "160k"     | The audio bitrate to use.                                                                           |
-| audio_thread_queue_size | 128        |                                                                                                     |
-| video_codec             | "libx264"  | The video codec to use for the recording.                                                           |
-| crf                     | 25         | The crf to use for the H.264 encoding.                                                              |
-| video_thread_queue_size | 32         |                                                                                                     |
-| encoding_preset         | "veryfast" | The encoding preset used for the H.264 encoding.                                                    |
-| encoding_threads        | 0          | How many threads to use for the encoding. 0 is auto.                                                |
+| option                  | default    | description                                                                                                                                                                              |
+| ----------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| base_url                | ""         | The base URL of your Nextcloud instance. Should include the http / https and have no leading slash.                                                                                      |
+| log_level               | "warning"  | The log level that should be used.                                                                                                                                                       |
+| recording_dir           | "."        | The directory where the recordings should be stored.                                                                                                                                     |
+| grid_view               | False      | If set to true the recording uses grid view instead of speaker view. The recording user is partially hidden in that it isn't visible but the empty slot in the grid view is still there. |
+| video_width             | 1280       | The virtual display and recording width in pixels.                                                                                                                                       |
+| video_height            | 720        | The virtual display and recording height in pixels.                                                                                                                                      |
+| color_depth             | 24         | The color depth to use for the virtual framebuffer.                                                                                                                                      |
+| framerate               | 30         | The framerate that should be used for the recording.                                                                                                                                     |
+| audio_codec             | "aac"      | The audio codec to use for the recording.                                                                                                                                                |
+| audio_bitrate           | "160k"     | The audio bitrate to use.                                                                                                                                                                |
+| audio_thread_queue_size | 128        |                                                                                                                                                                                          |
+| video_codec             | "libx264"  | The video codec to use for the recording.                                                                                                                                                |
+| crf                     | 25         | The crf to use for the H.264 encoding.                                                                                                                                                   |
+| video_thread_queue_size | 32         |                                                                                                                                                                                          |
+| encoding_preset         | "veryfast" | The encoding preset used for the H.264 encoding.                                                                                                                                         |
+| encoding_threads        | 0          | How many threads to use for the encoding. 0 is auto.                                                                                                                                     |
 
 ## Development setup
 To setup a dev environment for coding, clone the repository and then run `make dev-setup` to setup a virtual environment with the needed dependencies.

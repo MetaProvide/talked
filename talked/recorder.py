@@ -152,7 +152,9 @@ def launch_browser(call_link: str) -> WebDriver:
     # Press m to mute the microphone, if there is one attached.
     page.send_keys("m")
 
-    switch_to_speaker_view(driver)
+    # If grid view is set to False, switch to speaker view.
+    if not config["grid_view"]:
+        switch_to_speaker_view(driver)
 
     close_sidebar(driver)
 
