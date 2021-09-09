@@ -3,8 +3,6 @@ import time
 import logging
 from talked import config
 
-# TODO: figure out best way to deal with different audio bitrates for video and audio only recordings
-
 # Dict containing specific ffmpeg parameters
 # and related options for each supported video codec
 video_codecs = {
@@ -32,7 +30,7 @@ audio_codecs = {
             "-c:a",
             "aac",
             "-b:a",
-            config["audio_bitrate"],
+            config.get("audio_aac_bitrate", config["audio_bitrate"]),
         ],
         "file_extension": "aac",
     },
@@ -41,7 +39,7 @@ audio_codecs = {
             "-c:a",
             "libmp3lame",
             "-b:a",
-            config["audio_bitrate"],
+            config.get("audio_mp3_bitrate", config["audio_bitrate"]),
         ],
         "file_extension": "mp3",
     },
@@ -50,7 +48,7 @@ audio_codecs = {
             "-c:a",
             "libopus",
             "-b:a",
-            config["audio_bitrate"],
+            config.get("audio_opus_bitrate", config["audio_bitrate"]),
         ],
         "file_extension": "opus",
     },

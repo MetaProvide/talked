@@ -29,10 +29,7 @@ def start():
 
     token = request.get_json()["token"]
 
-    try:
-        audio_only = request.get_json()["audio_only"]
-    except KeyError:
-        audio_only = False
+    audio_only = request.get_json().get("audio_only", False)
 
     recording.clear()
     recording_thread = Thread(
