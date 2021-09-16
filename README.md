@@ -60,6 +60,11 @@ uwsgi --http 127.0.0.1:5000 --master --manage-script-name --mount /=talked.main:
 
 It's recommended to set up Nginx or Apache in front of uwsgi to handle TLS and HTTP Basic auth. Currently, there isn't any authentication system built into the Talked server, so it's recommend to set up HTTP Basic auth. It's also recommended to only allow requests from your Nextcloud server to the Talked server, this can either be configured in your firewall or web server config.
 
+When using uwsgi behind a webserver it's recommended to use the `--http-socket` option instead to connect over a unix socket. To do so create the folder `/var/run/talked` with the appropriate permissions for your setup and then run talked using a command like below:
+```
+uwsgi --http-socket /var/run/talked/talked.sock --master --manage-script-name --mount /=talked.main:app
+```
+
 You can have a look at the following instructions for nginx: https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-http-basic-authentication/
 
 ## Configuration options
@@ -147,7 +152,7 @@ SyslogIdentifier=talked
 StandardOutput=syslog
 StandardError=syslog
 
-ExecStart=/opt/talked/talked/bin/uwsgi --http 127.0.0.1:5000 --die-on-term --master --manage-script-name --mount /=talked.main:app
+ExecStart=/opt/talked/talked/bin/uwsgi --http-socket /var/run/talked/talked.sock --die-on-term --master --manage-script-name --mount /=talked.main:app
 Restart=always
 
 [Install]
