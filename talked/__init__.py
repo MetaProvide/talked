@@ -22,6 +22,7 @@ config = {
     "video_height": 720,
     "color_depth": 24,
     "framerate": 30,
+    "audio_only": False,
     "audio_codec": "wave",
     "audio_bitrate": "160k",
     "audio_thread_queue_size": 128,

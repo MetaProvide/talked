@@ -108,7 +108,7 @@ ffmpeg_audio_input = [
 ]
 
 
-def assemble_command(audio_only: bool = False):
+def assemble_command(audio_only: bool):
     if audio_only:
         try:
             audio_codec = audio_codecs[config["audio_codec"]]
