@@ -1,5 +1,10 @@
 __pycache__
 *.mp4
+*.wav
+*.flac
+*.mp3
+*.opus
+*.aac
 geckodriver.log
 /config.json
 /config.toml

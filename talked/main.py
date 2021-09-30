@@ -1,11 +1,12 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
-from talked import recorder
 from threading import Thread
 from threading import Event
 from queue import Queue
+from talked import recorder
 from talked import __version__
+from talked import config
 
 app = Flask(__name__)
 
@@ -29,8 +30,12 @@ def start():
 
     token = request.get_json()["token"]
 
+    audio_only = request.get_json().get("audio_only", config["audio_only"])
+
     recording.clear()
-    recording_thread = Thread(target=recorder.start, args=(token, queue, recording))
+    recording_thread = Thread(
+        target=recorder.start, args=(token, queue, recording, audio_only)
+    )
     recording_thread.start()
     output = queue.get()
 

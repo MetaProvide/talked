@@ -3,7 +3,6 @@ import subprocess
 import logging
 import sys
 import pkgutil
-import os
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
@@ -20,11 +19,12 @@ from pyvirtualdisplay import Display
 from threading import Event
 from queue import Queue
 from talked import config
+from talked.ffmpeg import assemble_command
 
 msg_queue = None
 
 
-def start(token: str, queue: Queue, recording: Event) -> None:
+def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
     global msg_queue
     msg_queue = queue
 
@@ -45,58 +45,22 @@ def start(token: str, queue: Queue, recording: Event) -> None:
         logging.info(call_link)
         browser = launch_browser(call_link)
         logging.info("Starting ffmpeg process")
-        ffmpeg = subprocess.Popen(
-            [
-                "ffmpeg",
-                "-nostdin",
-                "-nostats",
-                "-hide_banner",
-                "-loglevel",
-                "warning",
-                "-fflags",
-                "+igndts",
-                "-f",
-                "x11grab",
-                "-video_size",
-                f"{config['video_width']}x{config['video_height']}",
-                "-framerate",
-                str(config["framerate"]),
-                "-draw_mouse",
-                "0",
-                "-thread_queue_size",
-                str(config["video_thread_queue_size"]),
-                "-i",
-                os.environ["DISPLAY"],
-                "-f",
-                "pulse",
-                "-ac",
-                "2",
-                "-channel_layout",
-                "stereo",
-                "-thread_queue_size",
-                str(config["audio_thread_queue_size"]),
-                "-i",
-                "0",
-                "-pix_fmt",
-                "yuv420p",
-                "-c:a",
-                config["audio_codec"],
-                "-b:a",
-                config["audio_bitrate"],
-                "-c:v",
-                config["video_codec"],
-                "-crf",
-                str(config["crf"]),
-                "-preset",
-                config["encoding_preset"],
-                "-threads",
-                str(config["encoding_threads"]),
-                (
-                    f"{config['recording_dir']}/"
-                    f"{time.strftime('%Y%m%dT%H%M%S')}_output.mp4"
-                ),
-            ]
-        )
+
+        try:
+            ffmpeg_command = assemble_command(audio_only)
+        except RuntimeError:
+            msg_queue.put(
+                {
+                    "status": "error",
+                    "message": (
+                        "There was an issue with the recording configuration, "
+                        "please contact an administrator."
+                    ),
+                }
+            )
+            graceful_shutdown(browser)
+
+        ffmpeg = subprocess.Popen(ffmpeg_command)
         logging.info("Recording has started")
 
         msg_queue.put(
