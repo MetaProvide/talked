@@ -2,16 +2,23 @@
 
 ## [Unreleased]
 
+## 0.2.0 - 2021-09-30
+
 ### Added
 
 -   [#25](https://github.com/MetaProvide/talked/issues/25) Executable that gets installed on install
 -   [#28](https://github.com/MetaProvide/talked/issues/28) Commandline arguments to control host and port the internal server will bind to.
 -   Add Makefile for handling dev environment
+-   Add type hints
+-   [#6](https://github.com/MetaProvide/talked/issues/6) Add option to record in grid view
+-   [#23](https://github.com/MetaProvide/talked/issues/23) Add support for audio only recordings
+-   [#20](https://github.com/MetaProvide/talked/issues/20) Verify support for python 3.7
 
 ### Changed
 
 -   [#24](https://github.com/MetaProvide/talked/issues/24) Switch to toml for config file format
 -   [#27](https://github.com/MetaProvide/talked/issues/27) Remove uWSGI as a runtime dependency in pyproject file
+-   Recommend use of unix socket when running uwsgi behind webserver.
 
 ### Deprecated
 
