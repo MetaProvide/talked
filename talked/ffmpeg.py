@@ -90,7 +90,6 @@ ffmpeg_video_input = [
     "-thread_queue_size",
     str(config["video_thread_queue_size"]),
     "-i",
-    os.environ["DISPLAY"],
 ]
 
 # The ffmpeg parameters controlling the audio input
@@ -131,6 +130,7 @@ def assemble_command(audio_only: bool):
 
     if not audio_only:
         command += ffmpeg_video_input
+        command += [os.environ["DISPLAY"]]
         command += video_codec["args"]
 
     command += audio_codec["args"]
