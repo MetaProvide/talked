@@ -142,6 +142,8 @@ WorkingDirectory=/opt/talked
 User=talked
 Group=talked
 
+RuntimeDirectory=talked
+
 Environment=TALKED_CONFIG_PATH=/opt/talked/config.toml
 
 ProtectSystem=full
