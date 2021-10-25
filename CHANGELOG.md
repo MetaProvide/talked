@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## 0.2.1 - 2021-10-25
+
 ### Fixed
 
 -   Fix close_sidebar function causing a TimeoutException as the HTML in Talk was changed
