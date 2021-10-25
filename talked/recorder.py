@@ -245,7 +245,7 @@ def close_sidebar(driver: WebDriver) -> None:
         EC.visibility_of_element_located(
             (
                 By.CSS_SELECTOR,
-                ".top-bar.in-call button.top-bar__button.icon-menu-people",
+                ".top-bar.in-call button.top-bar__button .icon-leave-call",
             )
         )
     )
