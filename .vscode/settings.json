@@ -1,9 +1,18 @@
 {
   "editor.formatOnSave": true,
-  "python.linting.flake8Enabled": true,
-  "python.linting.enabled": true,
+  "python.formatting.blackPath": ".venv/bin/black",
+  "python.linting.flake8Path": ".venv/bin/flake8",
+  "python.linting.mypyPath": ".venv/bin/mypy",
+  "python.testing.pytestPath": ".venv/bin/pytest",
+  "python.linting.pylintPath": ".venv/bin/pylint",
+  "python.linting.banditPath": ".venv/bin/bandit",
   "python.formatting.provider": "black",
+  "python.analysis.typeCheckingMode": "off",
   "python.analysis.extraPaths": [
     "./talked"
-  ]
+  ],
+  "[python]": {
+    "editor.codeActionsOnSave": {"source.organizeImports": true},
+  },
+  "autoDocstring.startOnNewLine": true,
 }

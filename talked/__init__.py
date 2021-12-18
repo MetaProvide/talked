@@ -1,7 +1,8 @@
-import os
 import json
 import logging
+import os
 import sys
+
 from tomlkit import parse
 
 __version__ = "0.2.1"
@@ -34,7 +35,7 @@ config = {
 }
 
 if os.getenv("TALKED_CONFIG_PATH"):
-    with open(os.getenv("TALKED_CONFIG_PATH")) as config_file:
+    with open(os.getenv("TALKED_CONFIG_PATH"), encoding="utf-8") as config_file:
         if os.path.splitext(os.getenv("TALKED_CONFIG_PATH"))[1] == ".toml":
             try:
                 custom_config = parse(config_file.read())

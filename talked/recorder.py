@@ -1,27 +1,29 @@
-import time
-import subprocess
 import logging
-import sys
 import pkgutil
+import subprocess
+import sys
+import time
+from queue import Queue
+from threading import Event
+
+from pyvirtualdisplay import Display
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    NoSuchElementException,
+    TimeoutException,
+)
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import (
-    TimeoutException,
-    NoSuchElementException,
-    ElementClickInterceptedException,
-)
-from pyvirtualdisplay import Display
-from threading import Event
-from queue import Queue
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
 from talked import config
 from talked.ffmpeg import assemble_command
 
-msg_queue = None
+msg_queue: Queue
 
 
 def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
@@ -33,7 +35,7 @@ def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
 
     # Make sure an instance of Pulseaudio is running.
     logging.info("Starting pulseaudio")
-    subprocess.run(["pulseaudio", "--start"])
+    subprocess.run(["pulseaudio", "--start"], check=True)  # nosec
 
     logging.info("Starting virtual x server")
     with Display(
@@ -60,7 +62,7 @@ def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
             )
             graceful_shutdown(browser)
 
-        ffmpeg = subprocess.Popen(ffmpeg_command)
+        ffmpeg = subprocess.Popen(ffmpeg_command)  # nosec
         logging.info("Recording has started")
 
         msg_queue.put(
@@ -179,7 +181,7 @@ def join_call(driver: WebDriver) -> None:
     # Wait for the green Join Call button to appear then click it
     logging.info("Waiting for join call button to appear")
     try:
-        join_call = WebDriverWait(driver, 10).until(
+        join_call_button = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, "button.top-bar__button.success")
             )
@@ -196,7 +198,7 @@ def join_call(driver: WebDriver) -> None:
 
     time.sleep(2)
     logging.info("Joining call")
-    join_call.click()
+    join_call_button.click()
 
     # Wait for the call to initiate
     try:
