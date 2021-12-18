@@ -6,7 +6,9 @@ style.appendChild(
     .local-media-controls,
     #localVideoContainer,
     button.stripe--collapse,
-    .grid-navigation {
+    .grid-navigation,
+    .app-talk .vue-tooltip,
+    .toastify {
         display: none;
     }
 
