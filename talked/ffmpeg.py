@@ -1,6 +1,7 @@
+import logging
 import os
 import time
-import logging
+
 from talked import config
 
 # Dict containing specific ffmpeg parameters

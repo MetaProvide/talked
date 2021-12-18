@@ -1,17 +1,14 @@
-from flask import Flask
-from flask import jsonify
-from flask import request
-from threading import Thread
-from threading import Event
 from queue import Queue
-from talked import recorder
-from talked import __version__
-from talked import config
+from threading import Event, Thread
+
+from flask import Flask, jsonify, request
+
+from talked import __version__, config, recorder
 
 app = Flask(__name__)
 
 token = ""
-queue = Queue()
+queue: Queue = Queue()
 recording = Event()
 recording.set()
 

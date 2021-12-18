@@ -23,15 +23,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from talked import config
 from talked.ffmpeg import assemble_command
 
-msg_queue: Queue
-
 
 def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
-    global msg_queue
     msg_queue = queue
 
     # Assemble link for call to record
-    call_link = assemble_call_link(config["base_url"], token)
+    call_link = assemble_call_link(config["base_url"], token)  # type: ignore
 
     # Make sure an instance of Pulseaudio is running.
     logging.info("Starting pulseaudio")
@@ -45,7 +42,7 @@ def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
     ):
         logging.info("Starting browser")
         logging.info(call_link)
-        browser = launch_browser(call_link)
+        browser = launch_browser(call_link, msg_queue)
         logging.info("Starting ffmpeg process")
 
         try:
@@ -86,7 +83,7 @@ def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
         )
 
 
-def launch_browser(call_link: str) -> WebDriver:
+def launch_browser(call_link: str, msg_queue: Queue) -> WebDriver:
     logging.info("Configuring browser options")
     options = Options()
     options.set_preference("media.navigator.permission.disabled", True)
@@ -102,13 +99,13 @@ def launch_browser(call_link: str) -> WebDriver:
     driver.get(call_link)
 
     # Check if loaded page is a valid Talk room
-    is_valid_talk_room(driver)
+    is_valid_talk_room(driver, msg_queue)
 
     # Change the name of the recording user
     logging.info("Changing name of recording user")
     change_name_of_user(driver)
 
-    join_call(driver)
+    join_call(driver, msg_queue)
 
     # Get page body to send keyboard shortcuts
     page = driver.find_element_by_tag_name("body")
@@ -127,7 +124,7 @@ def launch_browser(call_link: str) -> WebDriver:
     # Go fullscreen
     page.send_keys("f")
 
-    logging.info("Loading custom CSS")
+    # Load custom CSS used to improve the recording
     load_custom_css(driver)
 
     # Give it some time to properly connect to participants.
@@ -139,7 +136,7 @@ def assemble_call_link(base_url: str, token: str) -> str:
     return base_url + "/index.php/call/" + token
 
 
-def is_valid_talk_room(driver: WebDriver) -> None:
+def is_valid_talk_room(driver: WebDriver, msg_queue: Queue) -> None:
     """Checks if the loaded page is a valid Talk room.
     It looks for the start call / join call button, if it isn't there
     it throws a TimeoutException notifies the HTTP api
@@ -177,7 +174,7 @@ def change_name_of_user(driver: WebDriver) -> None:
     )
 
 
-def join_call(driver: WebDriver) -> None:
+def join_call(driver: WebDriver, msg_queue: Queue) -> None:
     # Wait for the green Join Call button to appear then click it
     logging.info("Waiting for join call button to appear")
     try:
@@ -272,8 +269,14 @@ def close_toasts(driver: WebDriver) -> None:
 
 
 def load_custom_css(driver: WebDriver) -> None:
-    javascript = pkgutil.get_data("talked", "static/custom_css.js").decode("UTF-8")
-    driver.execute_script(javascript)
+    logging.info("Loading custom CSS")
+
+    javascript = pkgutil.get_data("talked", "static/custom_css.js")
+
+    if javascript:
+        driver.execute_script(javascript.decode("UTF-8"))
+    else:
+        logging.info("The custom CSS couldn't be loaded")
 
 
 def graceful_shutdown(driver: WebDriver) -> None:
