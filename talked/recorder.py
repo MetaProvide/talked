@@ -113,8 +113,8 @@ def launch_browser(call_link: str) -> WebDriver:
 
     # Press escape to remove focus from chat.
     page.send_keys(Keys.ESCAPE)
-    # Press m to mute the microphone, if there is one attached.
-    page.send_keys("m")
+    # Mute the talked user
+    mute_user(driver)
 
     # If grid view is set to False, switch to speaker view.
     if not config["grid_view"]:
@@ -212,6 +212,14 @@ def join_call(driver: WebDriver) -> None:
         )
         logging.warning("Failed to initiate call.")
         graceful_shutdown(driver)
+
+
+def mute_user(driver: WebDriver) -> None:
+    logging.info("Muting Talked user")
+    try:
+        driver.find_element_by_css_selector("#mute:not(.audio-disabled)").click()
+    except NoSuchElementException:
+        logging.info(("Mute button wasn't found. Assuming we are already muted."))
 
 
 def switch_to_speaker_view(driver: WebDriver) -> None:
