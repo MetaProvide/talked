@@ -184,7 +184,7 @@ def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: str) -> No
     try:
         join_call_button = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located(
-                (By.CSS_SELECTOR, "button.top-bar__button.success")
+                (By.CSS_SELECTOR, "button.top-bar__button.success:not(:disabled)")
             )
         )
     except TimeoutException:
@@ -197,7 +197,6 @@ def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: str) -> No
         logging.warning("There doesn't seem to be an active call in the room.")
         graceful_shutdown(driver)
 
-    time.sleep(2)
     logging.info("Joining call")
     join_call_button.click()
 
