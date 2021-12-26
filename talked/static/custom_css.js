@@ -8,8 +8,15 @@ style.appendChild(
     button.stripe--collapse,
     .grid-navigation,
     .app-talk .vue-tooltip,
-    .toastify {
+    .toastify,
+    #app-navigation-vue {
         display: none;
+    }
+
+    #videos {
+        height: 100% !important;
+        top: 0 !important;
+        padding: 8px !important;
     }
 
     .stripe-wrapper {

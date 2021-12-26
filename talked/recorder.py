@@ -24,7 +24,9 @@ from talked import config
 from talked.ffmpeg import assemble_command
 
 
-def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
+def start(
+    token: str, queue: Queue, recording: Event, audio_only: bool, nextcloud_version: str
+) -> None:
     msg_queue = queue
 
     # Assemble link for call to record
@@ -42,7 +44,7 @@ def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
     ):
         logging.info("Starting browser")
         logging.info(call_link)
-        browser = launch_browser(call_link, msg_queue)
+        browser = launch_browser(call_link, msg_queue, nextcloud_version)
         logging.info("Starting ffmpeg process")
 
         try:
@@ -83,7 +85,9 @@ def start(token: str, queue: Queue, recording: Event, audio_only: bool) -> None:
         )
 
 
-def launch_browser(call_link: str, msg_queue: Queue) -> WebDriver:
+def launch_browser(
+    call_link: str, msg_queue: Queue, nextcloud_version: str
+) -> WebDriver:
     logging.info("Configuring browser options")
     options = Options()
     options.set_preference("media.navigator.permission.disabled", True)
@@ -102,10 +106,9 @@ def launch_browser(call_link: str, msg_queue: Queue) -> WebDriver:
     is_valid_talk_room(driver, msg_queue)
 
     # Change the name of the recording user
-    logging.info("Changing name of recording user")
     change_name_of_user(driver)
 
-    join_call(driver, msg_queue)
+    join_call(driver, msg_queue, nextcloud_version)
 
     # Get page body to send keyboard shortcuts
     page = driver.find_element_by_tag_name("body")
@@ -117,7 +120,7 @@ def launch_browser(call_link: str, msg_queue: Queue) -> WebDriver:
 
     # If grid view is set to False, switch to speaker view.
     if not config["grid_view"]:
-        switch_to_speaker_view(driver)
+        switch_to_speaker_view(driver, nextcloud_version)
 
     close_sidebar(driver)
 
@@ -163,6 +166,7 @@ def is_valid_talk_room(driver: WebDriver, msg_queue: Queue) -> None:
 
 
 def change_name_of_user(driver: WebDriver) -> None:
+    logging.info("Changing name of recording user")
     edit_name = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located(
             (By.CSS_SELECTOR, ".username-form button.icon-rename")
@@ -174,7 +178,7 @@ def change_name_of_user(driver: WebDriver) -> None:
     )
 
 
-def join_call(driver: WebDriver, msg_queue: Queue) -> None:
+def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: str) -> None:
     # Wait for the green Join Call button to appear then click it
     logging.info("Waiting for join call button to appear")
     try:
@@ -196,6 +200,26 @@ def join_call(driver: WebDriver, msg_queue: Queue) -> None:
     time.sleep(2)
     logging.info("Joining call")
     join_call_button.click()
+
+    if nextcloud_version == "23":
+        logging.info("Handling device checker screen")
+        try:
+            device_checker_join_call_button = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, ".device-checker #call_button.success")
+                )
+            )
+        except TimeoutException:
+            msg_queue.put(
+                {
+                    "status": "error",
+                    "message": "There doesn't seem to be an active call in the room.",
+                }
+            )
+            logging.warning("There doesn't seem to be an active call in the room.")
+            graceful_shutdown(driver)
+
+        device_checker_join_call_button.click()
 
     # Wait for the call to initiate
     try:
@@ -221,20 +245,43 @@ def mute_user(driver: WebDriver) -> None:
         logging.info(("Mute button wasn't found. Assuming we are already muted."))
 
 
-def switch_to_speaker_view(driver: WebDriver) -> None:
+def switch_to_speaker_view(driver: WebDriver, nextcloud_version: str) -> None:
     # Switch to speaker view
     logging.info("Switching to speaker view")
-    try:
+
+    if nextcloud_version == "23":
         driver.find_element_by_css_selector(
-            ".top-bar.in-call button.icon-promoted-view"
+            ".local-media-controls button.action-item__menutoggle"
         ).click()
-    except NoSuchElementException:
-        logging.info(
-            (
-                "Speaker view button wasn't found. "
-                "Assuming we are already in speaker view."
+
+        try:
+            WebDriverWait(driver, 2).until(
+                EC.presence_of_element_located(
+                    (
+                        By.CSS_SELECTOR,
+                        "button.action-button .icon-promoted-view",
+                    )
+                )
+            ).click()
+        except TimeoutException:
+            logging.info(
+                (
+                    "Speaker view button wasn't found. "
+                    "Assuming we are already in speaker view."
+                )
             )
-        )
+    else:
+        try:
+            driver.find_element_by_css_selector(
+                ".top-bar.in-call button.icon-promoted-view"
+            ).click()
+        except NoSuchElementException:
+            logging.info(
+                (
+                    "Speaker view button wasn't found. "
+                    "Assuming we are already in speaker view."
+                )
+            )
 
 
 def close_sidebar(driver: WebDriver) -> None:

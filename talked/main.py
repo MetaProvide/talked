@@ -26,12 +26,14 @@ def start():
         return jsonify(message=response)
 
     token = request.get_json()["token"]
+    nextcloud_version = request.get_json()["nextcloud_version"]
 
     audio_only = request.get_json().get("audio_only", config["audio_only"])
 
     recording.clear()
     recording_thread = Thread(
-        target=recorder.start, args=(token, queue, recording, audio_only)
+        target=recorder.start,
+        args=(token, queue, recording, audio_only, nextcloud_version),
     )
     recording_thread.start()
     output = queue.get()
