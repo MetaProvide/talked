@@ -29,11 +29,12 @@ def start():
     nextcloud_version = request.get_json()["nextcloud_version"]
 
     audio_only = request.get_json().get("audio_only", config["audio_only"])
+    grid_view = request.get_json().get("grid_view", config["grid_view"])
 
     recording.clear()
     recording_thread = Thread(
         target=recorder.start,
-        args=(token, queue, recording, audio_only, nextcloud_version),
+        args=(token, queue, recording, nextcloud_version, audio_only, grid_view),
     )
     recording_thread.start()
     output = queue.get()

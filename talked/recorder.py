@@ -25,7 +25,12 @@ from talked.ffmpeg import assemble_command
 
 
 def start(
-    token: str, queue: Queue, recording: Event, audio_only: bool, nextcloud_version: str
+    token: str,
+    queue: Queue,
+    recording: Event,
+    nextcloud_version: str,
+    audio_only: bool,
+    grid_view: bool,
 ) -> None:
     msg_queue = queue
 
@@ -44,7 +49,7 @@ def start(
     ):
         logging.info("Starting browser")
         logging.info(call_link)
-        browser = launch_browser(call_link, msg_queue, nextcloud_version)
+        browser = launch_browser(call_link, msg_queue, nextcloud_version, grid_view)
         logging.info("Starting ffmpeg process")
 
         try:
@@ -86,7 +91,7 @@ def start(
 
 
 def launch_browser(
-    call_link: str, msg_queue: Queue, nextcloud_version: str
+    call_link: str, msg_queue: Queue, nextcloud_version: str, grid_view: bool
 ) -> WebDriver:
     logging.info("Configuring browser options")
     options = Options()
@@ -119,7 +124,7 @@ def launch_browser(
     mute_user(driver)
 
     # If grid view is set to False, switch to speaker view.
-    if not config["grid_view"]:
+    if not grid_view:
         switch_to_speaker_view(driver, nextcloud_version)
 
     close_sidebar(driver)
