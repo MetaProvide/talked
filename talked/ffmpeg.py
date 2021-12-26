@@ -112,17 +112,17 @@ def assemble_command(audio_only: bool):
     if audio_only:
         try:
             audio_codec = audio_codecs[config["audio_codec"]]
-        except KeyError:
+        except KeyError as e:
             logging.critical("The chosen audio codec isn't supported")
-            raise RuntimeError
+            raise RuntimeError from e
 
         file_extension = audio_codec["file_extension"]
     else:
         try:
             video_codec = video_codecs[config["video_codec"]]
-        except KeyError:
+        except KeyError as e:
             logging.critical("The chosen video codec isn't supported")
-            raise RuntimeError
+            raise RuntimeError from e
 
         audio_codec = audio_codecs[video_codec["audio_codec"]]
         file_extension = video_codec["file_extension"]
