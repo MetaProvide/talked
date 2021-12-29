@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added
+
+-   Support for Nextcloud 23
+-   Finalise recording script option to run script after a recording has finished
+
+### Fixed
+
+-   [#39](https://github.com/MetaProvide/talked/issues/39) Hide "You seem to be talking while muted" tooltip with CSS
+-   Click the mute button instead of using the keyboard shortcut as it seems to be more reliable
+-   Switch to looking for a join call button that isn't disabled, makes startup time faster when everything is running smooth
+-   Allow grid_view option to be overriden by talked client
+
 ## 0.2.1 - 2021-10-25
 
 ### Fixed
