@@ -53,7 +53,7 @@ def start(
         logging.info("Starting ffmpeg process")
 
         try:
-            ffmpeg_command = assemble_command(audio_only)
+            ffmpeg_command, filename = assemble_command(audio_only)
         except RuntimeError:
             msg_queue.put(
                 {
@@ -82,12 +82,30 @@ def start(
         ffmpeg.terminate()
         logging.info("Stop browser")
         browser.close()
+        logging.info("Recording has stopped")
         msg_queue.put(
             {
                 "status": "ok",
                 "message": "Recording has stopped.",
             }
         )
+
+        if config.get("finalise_recording_script", ""):
+            logging.info("Running finalise recording script")
+            try:
+                subprocess.run(  # nosec
+                    [
+                        config["finalise_recording_script"],
+                        f"{config['recording_dir']}/{filename}",
+                    ],
+                    check=True,
+                )
+            except subprocess.CalledProcessError:
+                logging.error(
+                    "The finalise recording script failed to run successfully!"
+                )
+
+        logging.info("Done!")
 
 
 def launch_browser(

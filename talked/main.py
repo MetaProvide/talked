@@ -7,7 +7,7 @@ from talked import __version__, config, recorder
 
 app = Flask(__name__)
 
-token = ""
+token = ""  # nosec
 queue: Queue = Queue()
 recording = Event()
 recording.set()
@@ -41,7 +41,7 @@ def start():
 
     if output["status"] == "error":
         recording.set()
-        token = ""
+        token = ""  # nosec
 
     return jsonify(message=output["message"])
 
@@ -53,7 +53,7 @@ def stop():
     if not recording.is_set():
         if request.get_json()["token"] == token:
             recording.set()
-            token = ""
+            token = ""  # nosec
             output = queue.get()
             response = output["message"]
         else:

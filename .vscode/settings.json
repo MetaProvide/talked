@@ -2,6 +2,7 @@
   "editor.formatOnSave": true,
   "python.formatting.blackPath": ".venv/bin/black",
   "python.linting.flake8Path": ".venv/bin/flake8",
+  "python.linting.mypyEnabled": false,
   "python.linting.mypyPath": ".venv/bin/mypy",
   "python.testing.pytestPath": ".venv/bin/pytest",
   "python.linting.pylintPath": ".venv/bin/pylint",

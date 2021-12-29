@@ -136,13 +136,12 @@ def assemble_command(audio_only: bool):
 
     command += audio_codec["args"]
 
+    filename = f"{time.strftime('%Y%m%dT%H%M%S')}_output.{file_extension}"
+
     command += [
         "-threads",
         str(config["encoding_threads"]),
-        (
-            f"{config['recording_dir']}/"
-            f"{time.strftime('%Y%m%dT%H%M%S')}_output.{file_extension}"
-        ),
+        f"{config['recording_dir']}/{filename}",
     ]
 
-    return command
+    return command, filename
