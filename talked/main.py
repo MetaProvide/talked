@@ -26,7 +26,7 @@ def start():
         return jsonify(message=response)
 
     token = request.get_json()["token"]
-    nextcloud_version = request.get_json()["nextcloud_version"]
+    nextcloud_version = request.get_json().get(["nextcloud_version"], "22")
 
     audio_only = request.get_json().get("audio_only", config["audio_only"])
     grid_view = request.get_json().get("grid_view", config["grid_view"])
