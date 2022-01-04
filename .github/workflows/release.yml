@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  release:
+    types: [released]
+env:
+  POETRY_VIRTUALENVS_CREATE: "false"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Release new version
+    steps:
+      - name: Checkout latest commit
+        uses: actions/checkout@v2
+      - name: Set up python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Python Poetry
+        uses: abatilo/actions-poetry@v2.1.0
+      - name: Install dependencies
+        run: |
+          python3 -m poetry install
+      - name: Build and Publish
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python3 -m poetry publish --build
