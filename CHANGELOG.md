@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## 0.3.0 - 2022-01-05
+
 ### Added
 
 -   Support for Nextcloud 23
