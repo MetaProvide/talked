@@ -6,7 +6,7 @@
 
 ### Fixed
 
--   Don't specify nextcloud_version as a list
+-   nextcloud_version shouldn't be a list
 
 ## 0.3.0 - 2022-01-05
 
