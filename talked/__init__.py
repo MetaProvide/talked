@@ -5,7 +5,7 @@ import sys
 
 from tomlkit import parse
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 LOG_LEVELS = {
     "critical": logging.CRITICAL,

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## 0.3.1 - 2022-01-11
+
+### Fixed
+
+-   Don't specify nextcloud_version as a list
+
 ## 0.3.0 - 2022-01-05
 
 ### Added
