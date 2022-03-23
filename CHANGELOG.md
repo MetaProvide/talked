@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## 0.3.2 - 2022-03-23
+
+### Fixed
+
+-   Make Nextcloud version comparison with int instead of string.
+
 ## 0.3.1 - 2022-01-11
 
 ### Fixed
