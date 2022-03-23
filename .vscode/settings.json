@@ -5,15 +5,14 @@
   "python.linting.mypyEnabled": false,
   "python.linting.mypyPath": ".venv/bin/mypy",
   "python.testing.pytestPath": ".venv/bin/pytest",
+  "python.linting.pylintEnabled": false,
   "python.linting.pylintPath": ".venv/bin/pylint",
   "python.linting.banditPath": ".venv/bin/bandit",
   "python.formatting.provider": "black",
   "python.analysis.typeCheckingMode": "off",
-  "python.analysis.extraPaths": [
-    "./talked"
-  ],
+  "python.analysis.extraPaths": ["./talked"],
   "[python]": {
-    "editor.codeActionsOnSave": {"source.organizeImports": true},
+    "editor.codeActionsOnSave": { "source.organizeImports": true }
   },
-  "autoDocstring.startOnNewLine": true,
+  "autoDocstring.startOnNewLine": true
 }

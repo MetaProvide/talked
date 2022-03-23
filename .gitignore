@@ -9,3 +9,4 @@ geckodriver.log
 /config.json
 /config.toml
 /dist
+/.mypy_cache
