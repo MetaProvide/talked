@@ -28,7 +28,7 @@ def start(
     token: str,
     queue: Queue,
     recording: Event,
-    nextcloud_version: str,
+    nextcloud_version: int,
     audio_only: bool,
     grid_view: bool,
 ) -> None:
@@ -109,7 +109,7 @@ def start(
 
 
 def launch_browser(
-    call_link: str, msg_queue: Queue, nextcloud_version: str, grid_view: bool
+    call_link: str, msg_queue: Queue, nextcloud_version: int, grid_view: bool
 ) -> WebDriver:
     logging.info("Configuring browser options")
     options = Options()
@@ -201,7 +201,7 @@ def change_name_of_user(driver: WebDriver) -> None:
     )
 
 
-def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: str) -> None:
+def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: int) -> None:
     # Wait for the green Join Call button to appear then click it
     logging.info("Waiting for join call button to appear")
     try:
@@ -223,7 +223,7 @@ def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: str) -> No
     logging.info("Joining call")
     join_call_button.click()
 
-    if nextcloud_version == "23":
+    if nextcloud_version == 23:
         logging.info("Handling device checker screen")
         try:
             device_checker_join_call_button = WebDriverWait(driver, 10).until(
@@ -267,11 +267,11 @@ def mute_user(driver: WebDriver) -> None:
         logging.info(("Mute button wasn't found. Assuming we are already muted."))
 
 
-def switch_to_speaker_view(driver: WebDriver, nextcloud_version: str) -> None:
+def switch_to_speaker_view(driver: WebDriver, nextcloud_version: int) -> None:
     # Switch to speaker view
     logging.info("Switching to speaker view")
 
-    if nextcloud_version == "23":
+    if nextcloud_version == 23:
         driver.find_element_by_css_selector(
             ".local-media-controls button.action-item__menutoggle"
         ).click()
