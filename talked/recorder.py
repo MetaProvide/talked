@@ -298,7 +298,7 @@ def switch_to_speaker_view(driver: WebDriver, nextcloud_version: int) -> None:
     # Switch to speaker view
     logging.info("Switching to speaker view")
 
-    if nextcloud_version == 23:
+    if nextcloud_version >= 23:
         driver.find_element_by_css_selector(
             ".local-media-controls button.action-item__menutoggle"
         ).click()
