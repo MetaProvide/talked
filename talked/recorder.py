@@ -129,7 +129,7 @@ def launch_browser(
     is_valid_talk_room(driver, msg_queue)
 
     # Change the name of the recording user
-    change_name_of_user(driver)
+    change_name_of_user(driver, nextcloud_version)
 
     join_call(driver, msg_queue, nextcloud_version)
 
@@ -188,13 +188,22 @@ def is_valid_talk_room(driver: WebDriver, msg_queue: Queue) -> None:
         graceful_shutdown(driver)
 
 
-def change_name_of_user(driver: WebDriver) -> None:
+def change_name_of_user(driver: WebDriver, nextcloud_version: int) -> None:
     logging.info("Changing name of recording user")
-    edit_name = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located(
-            (By.CSS_SELECTOR, ".username-form button.icon-rename")
+
+    if nextcloud_version >= 24:
+        edit_name = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.CSS_SELECTOR, ".username-form button .pencil-icon")
+            )
         )
-    )
+    else:
+        edit_name = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(
+                (By.CSS_SELECTOR, ".username-form button.icon-rename")
+            )
+        )
+
     edit_name.click()
     driver.find_element_by_css_selector("input.username-form__input").send_keys(
         "Talked" + Keys.ENTER
@@ -204,10 +213,18 @@ def change_name_of_user(driver: WebDriver) -> None:
 def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: int) -> None:
     # Wait for the green Join Call button to appear then click it
     logging.info("Waiting for join call button to appear")
+
+    if nextcloud_version >= 24:
+        join_call_button_css_selector = (
+            "#call_button.button-vue--vue-success:not(:disabled)"
+        )
+    else:
+        join_call_button_css_selector = "button.top-bar__button.success:not(:disabled)"
+
     try:
         join_call_button = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located(
-                (By.CSS_SELECTOR, "button.top-bar__button.success:not(:disabled)")
+                (By.CSS_SELECTOR, join_call_button_css_selector)
             )
         )
     except TimeoutException:
@@ -223,12 +240,22 @@ def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: int) -> No
     logging.info("Joining call")
     join_call_button.click()
 
-    if nextcloud_version == 23:
+    if nextcloud_version >= 23:
         logging.info("Handling device checker screen")
+
+        if nextcloud_version >= 24:
+            device_checker_join_call_button_css_selector = (
+                ".device-checker #call_button.button-vue--vue-success:not(:disabled)"
+            )
+        else:
+            device_checker_join_call_button_css_selector = (
+                ".device-checker #call_button.success"
+            )
+
         try:
             device_checker_join_call_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located(
-                    (By.CSS_SELECTOR, ".device-checker #call_button.success")
+                    (By.CSS_SELECTOR, device_checker_join_call_button_css_selector)
                 )
             )
         except TimeoutException:
@@ -271,7 +298,7 @@ def switch_to_speaker_view(driver: WebDriver, nextcloud_version: int) -> None:
     # Switch to speaker view
     logging.info("Switching to speaker view")
 
-    if nextcloud_version == 23:
+    if nextcloud_version >= 23:
         driver.find_element_by_css_selector(
             ".local-media-controls button.action-item__menutoggle"
         ).click()
@@ -321,7 +348,7 @@ def close_sidebar(driver: WebDriver) -> None:
         EC.visibility_of_element_located(
             (
                 By.CSS_SELECTOR,
-                ".top-bar.in-call button.top-bar__button .icon-leave-call",
+                ".top-bar.in-call .top-bar__button .icon-leave-call",
             )
         )
     )
