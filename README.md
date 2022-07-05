@@ -48,7 +48,7 @@ pip3 install talked wheel uwsgi
 
 Now let's create the config file at `/opt/talked/config.toml`. The only required parameter is `base_url` but it might be useful to change some of the other options as well. You can see a list of the available options further down. The most basic config would look like this:
 ```
-base_url = "talked.example.com"
+base_url = "https://nextcloud.example.com"
 ```
 
 Talked uses the environment variable `TALKED_CONFIG_PATH` to find the config file. The easiest way to set it is to put it in the systemd service file used to start the talked server.
