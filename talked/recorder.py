@@ -134,7 +134,7 @@ def launch_browser(
     join_call(driver, msg_queue, nextcloud_version)
 
     # Get page body to send keyboard shortcuts
-    page = driver.find_element_by_tag_name("body")
+    page = driver.find_element(By.TAG_NAME, "body")
 
     # Press escape to remove focus from chat.
     page.send_keys(Keys.ESCAPE)
@@ -205,7 +205,7 @@ def change_name_of_user(driver: WebDriver, nextcloud_version: int) -> None:
         )
 
     edit_name.click()
-    driver.find_element_by_css_selector("input.username-form__input").send_keys(
+    driver.find_element(By.CSS_SELECTOR, "input.username-form__input").send_keys(
         "Talked" + Keys.ENTER
     )
 
@@ -289,7 +289,7 @@ def join_call(driver: WebDriver, msg_queue: Queue, nextcloud_version: int) -> No
 def mute_user(driver: WebDriver) -> None:
     logging.info("Muting Talked user")
     try:
-        driver.find_element_by_css_selector("#mute:not(.audio-disabled)").click()
+        driver.find_element(By.CSS_SELECTOR, "#mute:not(.audio-disabled)").click()
     except NoSuchElementException:
         logging.info(("Mute button wasn't found. Assuming we are already muted."))
 
@@ -299,8 +299,8 @@ def switch_to_speaker_view(driver: WebDriver, nextcloud_version: int) -> None:
     logging.info("Switching to speaker view")
 
     if nextcloud_version >= 23:
-        driver.find_element_by_css_selector(
-            ".local-media-controls button.action-item__menutoggle"
+        driver.find_element(
+            By.CSS_SELECTOR, ".local-media-controls button.action-item__menutoggle"
         ).click()
 
         try:
@@ -321,8 +321,8 @@ def switch_to_speaker_view(driver: WebDriver, nextcloud_version: int) -> None:
             )
     else:
         try:
-            driver.find_element_by_css_selector(
-                ".top-bar.in-call button.icon-promoted-view"
+            driver.find_element(
+                By.CSS_SELECTOR, ".top-bar.in-call button.icon-promoted-view"
             ).click()
         except NoSuchElementException:
             logging.info(
@@ -337,11 +337,11 @@ def close_sidebar(driver: WebDriver) -> None:
     # Close the sidebar
     logging.info("Closing sidebar")
     try:
-        driver.find_element_by_css_selector("a.app-sidebar__close").click()
+        driver.find_element(By.CSS_SELECTOR, "a.app-sidebar__close").click()
     except ElementClickInterceptedException:
         logging.info("Assuming toast is covering close button")
         close_toasts(driver)
-        driver.find_element_by_css_selector("a.app-sidebar__close").click()
+        driver.find_element(By.CSS_SELECTOR, "a.app-sidebar__close").click()
 
     # Wait for sidebar to close
     WebDriverWait(driver, 10).until(
@@ -358,7 +358,7 @@ def close_toasts(driver: WebDriver) -> None:
     while True:
         logging.info("Closing toast")
         try:
-            driver.find_element_by_css_selector("span.toast-close").click()
+            driver.find_element(By.CSS_SELECTOR, "span.toast-close").click()
         except NoSuchElementException:
             logging.info("No more open toasts")
             break

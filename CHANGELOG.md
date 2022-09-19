@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## 0.4.1 - 2022-09-19
+
+### Added
+
+-   Update syntax of find_element to support newer versions of selenium
+
 ## 0.4.0 - 2022-05-19
 
 ### Added
